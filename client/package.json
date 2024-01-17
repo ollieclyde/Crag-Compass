@@ -10,18 +10,24 @@
     "preview": "vite preview"
   },
   "dependencies": {
+    "@chakra-ui/icons": "^2.1.1",
     "@chakra-ui/react": "^2.8.2",
     "@emotion/react": "^11.11.3",
     "@emotion/styled": "^11.11.0",
     "@react-google-maps/api": "^2.19.2",
     "axios": "^1.6.5",
     "framer-motion": "^10.17.12",
+    "leaflet": "^1.9.4",
     "moment": "^2.30.1",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
+    "react-google-autocomplete": "^2.7.3",
+    "react-icons": "^5.0.1",
+    "react-leaflet": "^4.2.1",
     "use-places-autocomplete": "^4.0.1"
   },
   "devDependencies": {
+    "@types/leaflet": "^1.9.8",
     "@types/react": "^18.2.43",
     "@types/react-dom": "^18.2.17",
     "@typescript-eslint/eslint-plugin": "^6.14.0",

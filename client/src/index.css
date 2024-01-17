@@ -6,3 +6,8 @@
   font-family: 'Montserrat', sans-serif;
   /* font-family: 'Roboto', sans-serif; */
 }
+
+.leaflet-container {
+  height: 100%;
+  width: 100%;
+}

@@ -5,11 +5,10 @@
 .page-root {
   height: 100vh;
   width: 100vw;
-  position:fixed;
 }
 
 .nav-bar {
-  height: 10%;
+  height: 18%;
   border: 5px;
   background-color: white;
   display: flex;
@@ -19,44 +18,183 @@
   box-shadow: 0 2px 6px lightgrey;
   box-shadow: 10px;
 }
+
+.title-logo-container {
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+}
+
+.title-text {
+  font-size: 30px;
+  font-weight: bold;
+}
+
 .logo-container {
   height: 100%;
   width: 20vw;
+  padding-left: 50px;
+  gap: 2rem;
   display: flex;
   justify-content: center;
-  background-color: white;
+  align-items: center;
+  padding-bottom: 13px;
 }
 
-.logo-container img{
-  background-color: white;
-  color: white;
+.logo-container img {
+  /* Targeting the image inside the container */
+  height: 100px;
+  /* Set a specific height */
+  width: 100px;
+  /* Set a specific width equal to the height */
+  border-radius: 50%;
+  /* This makes the image round */
+  object-fit: cover;
+  /* Optional: ensures the image covers the area without distortion */
 }
 
-.search-container{
+
+/* .form-content{
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+} */
+
+.search-container {
   padding-right: 100px;
 }
 
 .main-content {
   display: flex;
-  flex-direction: row;
+  flex-direction: column;
   height: 90%
 }
 
-
 .search-results {
-  overflow-y:auto;
-  width: 1000%;
+  width: 100%;
 }
 
 .crag-card {
-  margin: 2rem;
-  padding: 4px;
+  justify-content: center;
+  align-items: center;
+  max-width: 100%;
+  margin: 50px;
+  margin-left: 100px;
+  margin-right: 100px;
+  overflow: hidden;
+  transition: transform 0.3s ease, box-shadow 0.3s ease, border-width 0.3s ease;
+  box-shadow: 0px 10px 20px rgba(0, 0, 0, 0.5);
+  border: 10px solid #000;
 }
 
-.grade-slider-value{
-  padding-bottom: 50px;
+.search-icon:hover {
+  transform: translateY(-5px);
 }
-.drive-slider-value{
+
+.crag-card:hover {
+  transform: translateY(-2px);
+  box-shadow: 0px 10px 20px rgba(0, 0, 0, 0.7);
+}
+
+.grade-slider-value {
   padding-bottom: 50px;
 }
 
+.distance-slider-value {
+  padding-bottom: 50px;
+}
+
+.pagination-controls {
+  display: flex;
+  justify-content: space-around;
+}
+
+.card-header {
+  width: 30%;
+  height: 100%;
+  display: flex;
+  justify-content: center;
+  text-align: center;
+  padding: 0px;
+}
+
+.card-header-text {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  padding: 0px;
+}
+
+.card-body {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-evenly;
+  align-items: center;
+  height: 100%;
+  width: 45%;
+}
+
+.card-body-text {
+  display: flex;
+  flex-direction: column;
+  text-align: left;
+  gap: 1rem;
+  padding-left: 1rem;
+}
+
+.map-container {
+  height: 100%;
+  width: 25%;
+  overflow: hidden;
+}
+
+.climbing-type {
+  display: flex;
+}
+
+.search-filter {
+  display: flex;
+  padding: 1rem;
+  align-items: center;
+  gap: 2rem;
+}
+
+.routes-filter-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 1rem;
+}
+
+.filter-search-results-container {
+  display: flex;
+  align-items: center;
+}
+
+.weather-container {
+  padding-right: 1rem;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+  gap: 10px;
+  height: 100%;
+}
+
+.sunrise-sunset-container {
+  display: flex;
+  justify-content: space-evenly;
+  align-items: center;
+  height: 100%;
+  gap: 1rem;
+}
+
+.weather-icon-container {
+  display: flex;
+  justify-content: center;
+  padding-top: 4px;
+}

@@ -11,6 +11,7 @@ export type Crag = {
   osx: string;
   osy: string;
   climbingTypes: ClimbingType[];
+  driveLength: string | number;
 };
 
 export type ClimbingType = {

@@ -12,7 +12,7 @@ function maxMilesCalc(driveLength: number) {
 }
 
 // TODO CHANGE TO MILES AND MAKE SURE NAMES MATCH IT AND EVERYTHING BUT CURRENTLY JUST IN KM
-function getDistanceFromLatLonInKm(lat1: number, lon1: number, lat2: number, lon2: number, maxMiles: number) {
+function getDistanceFromLatLonInKm(lat1: number, lon1: number, lat2: number, lon2: number) {
   var R = 6371; // Radius of the earth in km
   var dLat = deg2rad(lat2 - lat1);  // deg2rad below
   var dLon = deg2rad(lon2 - lon1);
@@ -24,11 +24,7 @@ function getDistanceFromLatLonInKm(lat1: number, lon1: number, lat2: number, lon
   var c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
   var d = R * c; // Distance in km
 
-  if (maxMiles > d) {
-    return true;
-  } else {
-    return false;
-  }
+  return d;
 }
 
 function deg2rad(deg: number) {
@@ -39,16 +35,29 @@ function deg2rad(deg: number) {
 const getCrags = async function (req: any, res: any) {
   try {
     const { lng, lat, driveLength } = req.params;
-    const maxMiles = maxMilesCalc(+driveLength)
+    // const maxMiles = maxMilesCalc(+driveLength)
     // include in finall the function to then only go through the db once.
-    const allCrags = await Crag.findAll({ include: 'climbingTypes' });
-    const filteredCrags = allCrags.filter((crag => {
+    const driveLengthSplit = driveLength.split(',')
+    const allCrags: any = await Crag.findAll({ include: 'climbingTypes' });
+    const filteredCrags = allCrags.filter((crag: any) => {
       if (crag && crag.osy && crag.osx) {
-        return getDistanceFromLatLonInKm(+lat, +lng, +crag.osy, +crag.osx, maxMiles)
+        const dist = getDistanceFromLatLonInKm(+lat, +lng, +crag.osy, +crag.osx)
+        if (driveLengthSplit[1] > dist && driveLengthSplit[0] < dist) {
+          return true;
+        } else {
+          return false;
+        }
       }
-    }))
+    })
 
-    res.status(200).json(filteredCrags);
+    const filteredCragsAndKMDistance = filteredCrags.map((crag: any) => {
+      return {
+        ...crag.dataValues,
+        distance: Math.ceil(getDistanceFromLatLonInKm(+lat, +lng, +crag.osy, +crag.osx))
+      }
+    })
+
+    res.status(200).json(filteredCragsAndKMDistance);
   } catch (err) {
     console.error(err, "error");
     res.status(500).json({ data: null, error: { code: 500, msg: "An error occurred." } });
@@ -99,14 +108,10 @@ const postCrags = async function (req: any, res: any) {
   }
 };
 
-const postClimbingType = async function (req: any, res: any) {
-
-}
 
 const controller = {
   getCrags,
   postCrags,
-  postClimbingType
 }
 
 export default controller
