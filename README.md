@@ -19,12 +19,6 @@ Types are certainly still very loose and will need refining. Some information on
 
 
 
-### Main Tasks Left
-
-
-
-
-
 ### Client
 - Move into client folder: `cd client`
 - To run the front-end: `npm run dev`
