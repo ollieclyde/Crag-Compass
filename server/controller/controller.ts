@@ -1,20 +1,8 @@
 import { Crag, ClimbingType } from '../models/index'
-const typeIDs = {
-  sport: 3,
-  bouldering: 1,
-  trad: 2,
-  unknown: 4
-}
 
-function maxMilesCalc(driveLength: number) {
-  const milesPerMin = 112.654 / 60;
-  return Math.ceil(milesPerMin * driveLength)
-}
-
-// TODO CHANGE TO MILES AND MAKE SURE NAMES MATCH IT AND EVERYTHING BUT CURRENTLY JUST IN KM
 function getDistanceFromLatLonInKm(lat1: number, lon1: number, lat2: number, lon2: number) {
-  var R = 6371; // Radius of the earth in km
-  var dLat = deg2rad(lat2 - lat1);  // deg2rad below
+  var R = 6371;
+  var dLat = deg2rad(lat2 - lat1);
   var dLon = deg2rad(lon2 - lon1);
   var a =
     Math.sin(dLat / 2) * Math.sin(dLat / 2) +
@@ -22,7 +10,7 @@ function getDistanceFromLatLonInKm(lat1: number, lon1: number, lat2: number, lon
     Math.sin(dLon / 2) * Math.sin(dLon / 2)
     ;
   var c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
-  var d = R * c; // Distance in km
+  var d = R * c;
 
   return d;
 }
@@ -34,15 +22,20 @@ function deg2rad(deg: number) {
 
 const getCrags = async function (req: any, res: any) {
   try {
-    const { lng, lat, driveLength } = req.params;
-    // const maxMiles = maxMilesCalc(+driveLength)
-    // include in finall the function to then only go through the db once.
-    const driveLengthSplit = driveLength.split(',')
+    const { lng, lat, distance } = req.params;
+
+    // get the minimum and maximum distance
+    const distanceSplit = distance.split(',')
+
+    // return all the crags in the db and all the assosiated climbingTypes
     const allCrags: any = await Crag.findAll({ include: 'climbingTypes' });
+
+
+    // filter out the crags which are not within the KMs specified
     const filteredCrags = allCrags.filter((crag: any) => {
       if (crag && crag.osy && crag.osx) {
         const dist = getDistanceFromLatLonInKm(+lat, +lng, +crag.osy, +crag.osx)
-        if (driveLengthSplit[1] > dist && driveLengthSplit[0] < dist) {
+        if (distanceSplit[1] > dist && distanceSplit[0] < dist) {
           return true;
         } else {
           return false;
@@ -50,6 +43,7 @@ const getCrags = async function (req: any, res: any) {
       }
     })
 
+    // add the calculated distance to the crag database
     const filteredCragsAndKMDistance = filteredCrags.map((crag: any) => {
       return {
         ...crag.dataValues,
@@ -63,12 +57,17 @@ const getCrags = async function (req: any, res: any) {
     res.status(500).json({ data: null, error: { code: 500, msg: "An error occurred." } });
   }
 }
+
+// Function to be able to post the crag data to the database
 const postCrags = async function (req: any, res: any) {
   try {
     const { crag } = req.body;
     // TODO CREATE TYPE FOR THIS TO ENSURE YOU ARE GETTING EXPECTED DATA
+
+    // only add the crags if it is in Englad - if you want to add Scotland and Wales you can simply add that option here
     if (crag?.cragName && crag.country === 'England') {
 
+      // checks whether that crag is alread in the database
       const existingCrag = await Crag.findOne({
         where: {
           cragName: crag.cragName,
@@ -77,6 +76,7 @@ const postCrags = async function (req: any, res: any) {
         }
       });
 
+      // add crag if it is not
       if (!existingCrag) {
         const newCrag = await Crag.create({
           cragName: crag.cragName,
@@ -90,7 +90,6 @@ const postCrags = async function (req: any, res: any) {
           faces: crag.faces
         });
 
-        // Assuming you have a method to add climbing types
         const climbingTypeID = crag.climbingTypes;
         await newCrag.addClimbingTypes(climbingTypeID);
       } else {

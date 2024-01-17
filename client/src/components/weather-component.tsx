@@ -1,7 +1,6 @@
 import { useState, useEffect } from 'react';
 import axios from 'axios';
 
-
 import { TiWeatherSunny } from "react-icons/ti";
 import { TiWeatherDownpour } from "react-icons/ti";
 import { FiSunset } from "react-icons/fi";
@@ -9,12 +8,8 @@ import { FiSunrise } from "react-icons/fi";
 
 import { Text } from '@chakra-ui/react';
 
-
-
-
 const WeatherComponent = ({ lat, lon, date }): any => {
   const [weatherData, setWeatherData] = useState(null);
-
 
   const getDaysFromNow = (dateString: any) => {
     const oneDay = 24 * 60 * 60 * 1000;
@@ -77,32 +72,3 @@ const WeatherComponent = ({ lat, lon, date }): any => {
 };
 
 export default WeatherComponent;
-
-
-// useEffect(() => {
-//   const apiKey = weatherApiKey; // Your OpenWeather API key stored in .env
-
-//   const url = `api.openweathermap.org/data/2.5/forecast/daily?lat=44.34}&lon=10.99&cnt=7&appid=${apiKey}`;
-//   const timestamp = new Date(date).getTime() / 1000;
-//   // const currentTimeStampe = Date.now()
-
-//   const fetchWeather = async () => {
-//     try {
-//       const response = await axios.get(url);
-//       console.log(response)
-//       const dailyForecasts = response.data.list;
-
-//       // Find the forecast for the specific day
-//       const specificDayForecast = dailyForecasts.find(day =>
-//         Math.abs(day.dt - timestamp) < 86400); // 86400 seconds = 1 day
-
-//       if (specificDayForecast) {
-//         console.log(specificDayForecast)
-//         setWeatherData(specificDayForecast);
-//       } else {
-//         console.log("Forecast for the specific day not found.");
-//       }
-//     } catch (error) {
-//       console.error("Error fetching weather data:", error);
-//     }
-//   };

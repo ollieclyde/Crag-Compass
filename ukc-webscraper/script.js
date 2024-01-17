@@ -123,14 +123,13 @@ const parseTableRow = async (item, page) => {
   return newSearchRes;
 }
 
+// main function which will scrape the data base through Search and the post that data to the database
 (async () => {
   const browser = await puppeteer.launch({ headless: true });
 
   try {
     const pageURL = 'https://www.ukclimbing.com/logbook/crags/?location=Leeds&distance=50';
     const searchResults = await search(browser, pageURL);
-
-    console.log(searchResults)
 
     if (searchResults && searchResults.length > 0) {
 

@@ -36,12 +36,14 @@ import { Crag, Coords } from './types/types'
 import { SearchResults } from './components/search-results';
 import './App.css'
 
-// structure for grade array when that feature is implemented
+// Structure for grade array when that feature is implemented
 // const sportGrade: string[] = ['4a', '4b', '4c', '5a', '5c', '6a', '6a+', '6b', '6b+', '6c', '6c+', '7a', '7a+', '7b', '7b+', '7c', '7c +', '8a', '8a+', '8b', '8b+', '8c', '8c+', '9a', '9a+', '9b', '9b+']
 // const [gradeRange, setGradeRange] = useState<string[]>(['5a', '8a']);
 
 function App() {
+  //Main crag state from the only api call to data base to get all the crags
   const [crags, setCrags] = useState<Crag[]>([]);
+  //Crags that have been filtered from the main state from the main set of filters - rocktype climbing type routes etc.
   const [filteredCrags, setFilteredCrags] = useState<Crag[]>([]);
   const [location, setLocation] = useState<string>('London');
   const [currentLocation, setCurrentLocation] = useState<string>('London')
@@ -77,7 +79,7 @@ function App() {
       console.error('Error fetching crags:', error);
     }
   };
-
+// Use of Google Maps Geocode
   const geocodeLocation = async (address: string): Promise<Coords | null> => {
     const geocoder = new google.maps.Geocoder();
     try {
@@ -100,7 +102,7 @@ function App() {
   const handleCheckboxChange = (setter: any) => (values: any) => {
     const flag = values.includes('all')
     if (values[0] === 'all' && values.length > 1) {
-      setter(values.filter(value => value !== 'all'));
+      setter(values.filter((value: any) => value !== 'all'));
     } else if (!flag) {
       setter(values);
     } else {
@@ -108,22 +110,15 @@ function App() {
     }
   };
 
-  const handleGradeChange = (values: number[]) => {
-    const newGradeRange = [sportGrade[values[0]], sportGrade[values[1]]];
-    setGradeRange(newGradeRange);
-  }
-
   const handleDist = (values: number[]) => {
     setDistRange(values);
   }
-
-
   const numOfRoutesHandler = (values: number[]) => {
     setNumOfRoutes(values)
   }
 
   const searchHandler = async () => {
-
+    // Only call database if distance or location change otherwise just filter
     if (location !== currentLocation || distRange[0] !== searchedDistRange[0] || distRange[1] !== searchedDistRange[1]) {
       setCurrentLocation(location);
       setSearchedDistRange(distRange)
@@ -137,7 +132,6 @@ function App() {
       setFilteredCrags(filtered);
     }
     onClose()
-    // distanceMatrix(currentCoords, { lng: '-0.16544', lat: "51.49153" }).then((res) => console.log(res))
   };
 
   const basicFilter = (crag: Crag) => {
@@ -156,7 +150,7 @@ function App() {
         return false;
       }
     }
-    //ENSURE WORKS WITH UNKnown
+    //check that the crag has the correct climbingtype
     if (!climbingType.includes('all')) {
       let flag = false;
       for (let type of climbingType) {
@@ -174,6 +168,7 @@ function App() {
   const [size, setSize] = useState('xl')
 
 
+  //Modularisation of code base needed! move Nav Bar into a separate component and then within that move the modal component
   return (
     <>
       <div className='page-root'>
@@ -268,30 +263,6 @@ function App() {
                     </RangeSlider>
                   </FormControl>
 
-                  {/* <FormLabel>Grade Range</FormLabel>
-                    <RangeSlider
-                      aria-label={['min', 'max']}
-                      min={0}
-                      max={sportGrade.length - 1}
-                      defaultValue={[10, 20]}
-                      minStepsBetweenThumbs={1}
-                      onChange={handleGradeChange}
-                    >
-                      <RangeSliderTrack>
-                        <RangeSliderFilledTrack />
-                      </RangeSliderTrack>
-                      <RangeSliderThumb index={0} >
-                        <div className='grade-slider-value'>
-                          <p>{gradeRange[0]}</p>
-                        </div>
-                      </RangeSliderThumb>
-                      <RangeSliderThumb index={1}>
-                        <div className='grade-slider-value'>
-                          <p>{gradeRange[1]}</p>
-                        </div>
-                      </RangeSliderThumb>
-                    </RangeSlider> */}
-
                   <FormControl className='form-content'>
                     <FormLabel pb="2rem">Distance</FormLabel>
                     <RangeSlider
@@ -339,8 +310,10 @@ function App() {
   )
 }
 
+export default App
 
-// Function to calculate distance between to coordinates using Google Maps Api
+/*
+Code to deal with driving distance and grades
 const distanceMatrix = async (originCoords: Coords, destinationCoords: Coords) => {
   const origin = new google.maps.LatLng(+originCoords.lat, +originCoords.lng);
   const destination = new google.maps.LatLng(+destinationCoords.lat, +destinationCoords.lng);
@@ -373,16 +346,31 @@ const distanceMatrix = async (originCoords: Coords, destinationCoords: Coords) =
     console.error(`Google distance matrix error: ${err} `)
   }
 }
+ <FormLabel>Grade Range</FormLabel>
+                    <RangeSlider
+                      aria-label={['min', 'max']}
+                      min={0}
+                      max={sportGrade.length - 1}
+                      defaultValue={[10, 20]}
+                      minStepsBetweenThumbs={1}
+                      onChange={handleGradeChange}
+                    >
+                      <RangeSliderTrack>
+                        <RangeSliderFilledTrack />
+                      </RangeSliderTrack>
+                      <RangeSliderThumb index={0} >
+                        <div className='grade-slider-value'>
+                          <p>{gradeRange[0]}</p>
+                        </div>
+                      </RangeSliderThumb>
+                      <RangeSliderThumb index={1}>
+                        <div className='grade-slider-value'>
+                          <p>{gradeRange[1]}</p>
+                        </div>
+                      </RangeSliderThumb>
+                    </RangeSlider> */
 
-
-
-
-/*
-Left Over TODOs
-
-TODO: grey out calendar if before current date
-TODO: Ensure Date state variable changes on state change;
-TODO: Sort the form to have required values and ensure to controlled/uncontrolled warnings
-TODO: Create weather icons that change
-*/
-export default App
+// const handleGradeChange = (values: number[]) => {
+//   const newGradeRange = [sportGrade[values[0]], sportGrade[values[1]]];
+//   setGradeRange(newGradeRange);
+// }

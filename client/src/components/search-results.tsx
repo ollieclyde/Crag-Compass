@@ -1,7 +1,6 @@
 import { useState, useEffect } from 'react'
 import { Button, Card, CardBody, Text, Divider, CardHeader, Box, IconButton } from '@chakra-ui/react';
 
-
 import axios from 'axios';
 
 import { MapContainer, TileLayer, Marker, Popup, } from 'react-leaflet'
@@ -18,8 +17,7 @@ import { ArrowForwardIcon, ArrowBackIcon } from '@chakra-ui/icons'
 
 export function SearchResults({ filteredCrags, cragCount, setFilteredCrags, date }: any) {
 
-
-  const [filterFlag, setFilterFlag] = useState(false);
+  const [filterFlag, setFilterFlag] = useState<boolean>(false);
 
   const filterHandler = () => {
     if (filterFlag) {
@@ -32,6 +30,7 @@ export function SearchResults({ filteredCrags, cragCount, setFilteredCrags, date
   const [routeFlag, setRouteFlag] = useState<boolean>(false);
   const [distanceFlag, setDistanceFlag] = useState<boolean>(false);
 
+  // sort crags on routes - ascending or descending depending on the flag. Also set the current page back to the start.
   const handleRouteFilter = () => {
     const cragsToSort = [...filteredCrags];
 
@@ -44,7 +43,7 @@ export function SearchResults({ filteredCrags, cragCount, setFilteredCrags, date
     setCurrentPage(0);
   };
 
-
+  // sort crags by distance - ascending or descending depending on the flag. Also set the current page back to the start.
   const handleDistanceFilter = () => {
     const cragsToSort = [...filteredCrags];
 
@@ -58,8 +57,8 @@ export function SearchResults({ filteredCrags, cragCount, setFilteredCrags, date
     setCurrentPage(0)
   };
 
+  // state for only the current page that the user is on.
   const [currentPageCrags, setCurrentPageCrags] = useState([])
-
 
   useEffect(() => {
     const slicedCrags: any = filteredCrags.slice(0, 10);
@@ -67,10 +66,13 @@ export function SearchResults({ filteredCrags, cragCount, setFilteredCrags, date
     setCurrentPageCrags(slicedCrags)
   }, [filteredCrags, distanceFlag, routeFlag])
 
+  // state to keep track of which page the user is on.
   const [currentPage, setCurrentPage] = useState(0);
   const itemsPerPage = 10;
 
+  // function to determine which page the user is on
   const pageCount = Math.ceil(filteredCrags.length / itemsPerPage);
+
 
   const handleNext = () => {
     if (currentPage < pageCount - 1) {
