@@ -5,7 +5,7 @@ Crag Compass is an innovative web application designed to assist climbers in dis
 
 - Frontend in React with Vite, Typescript. Backend in Express, Sequelize and PostgreSQL.
 - Puppeteer to web-scrape and fill the database with relevant information for the application.
-- Multiple APIs for the location, weather and directions.
+- Multiple APIs for the location, weather and directions. 
 
 
 
@@ -23,6 +23,8 @@ Crag Compass is an innovative web application designed to assist climbers in dis
 - Introduce a "favourite crags" feature, allowing users to save preferred crags and view extended information, including driving times between them.
 - Implement autocomplete for location input to validate addresses for geocoding.
 - Upgrade weather data presentation by enriching the current information sourced from the weather URL.
+
+### Getting Started:
 
 ### Client
 - Move into client folder: `cd client`
