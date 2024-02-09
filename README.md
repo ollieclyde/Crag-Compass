@@ -1,37 +1,28 @@
 
 ### Crag Compass
 
-This is web application which allows users to search for rock climbing crags using the following techstack:
+Crag Compass is an innovative web application designed to assist climbers in discovering new climbing locations and crags around the world. It offers an intuitive interface that enables users to easily search for climbing spots based on their preferences, including location, difficulty level, weather and type of climbing (such as bouldering, sport climbing, or traditional climbing). Whether you're a seasoned climber looking for a new challenge or a beginner eager to explore the climbing world, Crag Compass is your go-to resource for finding the perfect crag.
 
-
-
-
-![Alt text](<readMeAssets/Screenshot 2024-01-16 at 18.55.12.png>)
-
+- Initialised frontend and backend in React with Vite, Typescript, Express, Sequelize and PostgreSQL.
+- Utilised Puppeteer to web-scrape and fill the database with relevant information for the application.
+- Implemented multiples APIs for the location, weather and directions.
 
 
 
 
 
-### Key information
+![Alt text](<readMeAssets/Crag-Compass-Screenshot>)
 
-Types are certainly still very loose and will need refining. For example, I had hoped to calculated driving time but due to the cost of the number of API calls I changed to simply using distance in KM. Analysis of the datastructure at hand will be needed to determine types.
 
-Additional Information:
-crag.osx = longitude
-crag.oxy = latitude.
 
-Happy to jump on a call to explain any of this further.
+
 
 ### Next features to be implements
 - Better Modularisation of the Nav bar and the Modal component
 - Add all the route data for each individual crag. This would involve improving the webscraper to take the individual crag url from UKC and webscraping information such as each route, how many stars they have (or how popular the routes or the crag is), crag description, whether access is allowed, partially permitted or denied and even approach (walking) time.
 - Feature for the user to favourite certain crags. Within the favourite list(this could be an additional navigation feature) more information can be displayed as well as driving time between crags to help them decide which one could be best for them.
 - Autocomplete on the location input to ensure only appropriate address for the geocode converter to work.
-- Guarantee that only dates in the future and within the 7 days weather forecast period are allowed.
 - Display better weather data from the weather URL currently being used - enrich what is already there
-
-This app would be a good refactor if you are interested in working with SQL database as adding crags route information would be an interesting task in relational databases. It would also be good in learning about Typescript and a good task to ensure there are no `any` left!
 
 ### Client
 - Move into client folder: `cd client`
@@ -43,7 +34,6 @@ This app would be a good refactor if you are interested in working with SQL data
 - Run `npm i`
 - Change any config information in the .config.js file, such as username and password for you PostgreSQL account - ensure you have PostGreSQL set up
 - To run the server: `npm run dev`
-- Please ignore the migrations folder - the setup I used happened to great migration options if you wanted to move in js from typescript
 
 ### Webscraper
 To fill the database with data follow these instructions:
