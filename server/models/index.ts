@@ -1,27 +1,23 @@
-import type { Sequelize, Model } from 'sequelize'
-import { Crag } from './Crag'
-import { ClimbingType } from './ClimbingType'
+import type { Sequelize, Model } from "sequelize";
+import { Crag } from "./Crag";
+import { ClimbingType } from "./ClimbingType";
 
-export {
-  Crag,
-  ClimbingType
-}
+export { Crag, ClimbingType };
 
 export function initModels(sequelize: Sequelize) {
-  Crag.initModel(sequelize)
-  ClimbingType.initModel(sequelize)
+  Crag.initModel(sequelize);
+  ClimbingType.initModel(sequelize);
 
   Crag.belongsToMany(ClimbingType, {
-    as: 'climbingTypes',
-    through: 'crags_climbing_types',
-    onDelete: 'CASCADE'
-  })
+    as: "climbingTypes",
+    through: "crags_climbing_types",
+    onDelete: "CASCADE",
+  });
   ClimbingType.belongsToMany(Crag, {
-    as: 'crags',
-    through: 'crags_climbing_types',
-    onDelete: 'CASCADE'
-  })
-
+    as: "crags",
+    through: "crags_climbing_types",
+    onDelete: "CASCADE",
+  });
 
   // sequelize.sync({
   //   alter: true,
@@ -29,6 +25,6 @@ export function initModels(sequelize: Sequelize) {
 
   return {
     Crag,
-    ClimbingType
-  }
+    ClimbingType,
+  };
 }

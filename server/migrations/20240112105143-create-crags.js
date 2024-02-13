@@ -1,65 +1,65 @@
-const DataTypes = require('sequelize').DataTypes
+const DataTypes = require("sequelize").DataTypes;
 
 module.exports = {
   up: async (queryInterface, Sequelize) => {
-    await queryInterface.createTable('crags', {
+    await queryInterface.createTable("crags", {
       cragName: {
         type: DataTypes.STRING,
-        field: 'crag_name',
-        allowNull: false
+        field: "crag_name",
+        allowNull: false,
       },
       location: {
         type: DataTypes.STRING,
-        field: 'location'
+        field: "location",
       },
       country: {
         type: DataTypes.STRING,
-        field: 'country'
+        field: "country",
       },
       osx: {
         type: DataTypes.STRING,
-        field: 'osx',
-        allowNull: false
+        field: "osx",
+        allowNull: false,
       },
       osy: {
         type: DataTypes.STRING,
-        field: 'osy',
-        allowNull: false
+        field: "osy",
+        allowNull: false,
       },
       ukcUrl: {
         type: DataTypes.STRING,
-        field: 'ukc_url'
+        field: "ukc_url",
       },
       rockType: {
         type: DataTypes.STRING,
-        field: 'rock_type'
+        field: "rock_type",
       },
       routes: {
         type: DataTypes.STRING,
-        field: 'routes'
+        field: "routes",
       },
       faces: {
         type: DataTypes.STRING,
-        field: 'faces'
+        field: "faces",
       },
       id: {
         type: DataTypes.UUID,
-        field: 'id',
+        field: "id",
         primaryKey: true,
         allowNull: false,
-        unique: true
+        unique: true,
       },
       createdAt: {
         type: DataTypes.DATE,
-        field: 'created_at'
+        field: "created_at",
       },
       updatedAt: {
         type: DataTypes.DATE,
-        field: 'updated_at'
-      }
-    })
+        field: "updated_at",
+      },
+    });
   },
   down: async (queryInterface, Sequelize) => {
-    await queryInterface.dropTable('crags');
+    await queryInterface.dropTable("crags");
   },
 };

@@ -1,12 +1,12 @@
-import { useState, useEffect } from 'react';
-import axios from 'axios';
+import { useState, useEffect } from "react";
+import axios from "axios";
 
 import { TiWeatherSunny } from "react-icons/ti";
 import { TiWeatherDownpour } from "react-icons/ti";
 import { FiSunset } from "react-icons/fi";
 import { FiSunrise } from "react-icons/fi";
 
-import { Text } from '@chakra-ui/react';
+import { Text } from "@chakra-ui/react";
 
 const WeatherComponent = ({ lat, lon, date }): any => {
   const [weatherData, setWeatherData] = useState(null);
@@ -30,7 +30,7 @@ const WeatherComponent = ({ lat, lon, date }): any => {
 
     const fetchWeather = async () => {
       try {
-        const response = await axios.get(url)
+        const response = await axios.get(url);
         const dailyForecasts = response.data.daily;
         if (dailyForecasts) {
           setWeatherData(dailyForecasts);
@@ -47,25 +47,32 @@ const WeatherComponent = ({ lat, lon, date }): any => {
   if (!weatherData) return <div>Loading...</div>;
 
   return (
-    <div className='weather-container'>
-      <div className='weather-icon-container'>
-        {(weatherData?.precipitation_probability_max[daysFromNow] > 50) ?
-          <TiWeatherDownpour size='4rem' />
-          :
+    <div className="weather-container">
+      <div className="weather-icon-container">
+        {weatherData?.precipitation_probability_max[daysFromNow] > 50 ? (
+          <TiWeatherDownpour size="4rem" />
+        ) : (
           <TiWeatherSunny size="4rem" />
-        }
+        )}
       </div>
-      <p>Avg Temp: {((weatherData?.temperature_2m_max[daysFromNow] + weatherData?.temperature_2m_min[daysFromNow]) / 2).toFixed()}°C</p>
-      <p>Chance of Rain: {weatherData?.precipitation_probability_max[daysFromNow]}% </p>
-      <div className='sunrise-sunset-container'>
+      <p>
+        Avg Temp:{" "}
+        {(
+          (weatherData?.temperature_2m_max[daysFromNow] +
+            weatherData?.temperature_2m_min[daysFromNow]) /
+          2
+        ).toFixed()}
+        °C
+      </p>
+      <p>
+        Chance of Rain:{" "}
+        {weatherData?.precipitation_probability_max[daysFromNow]}%{" "}
+      </p>
+      <div className="sunrise-sunset-container">
         <FiSunrise size="20px" />
-        <Text>
-          {weatherData?.sunrise[daysFromNow].slice(-5)}
-        </Text>
+        <Text>{weatherData?.sunrise[daysFromNow].slice(-5)}</Text>
         <FiSunset size="20px" />
-        <Text>
-          {weatherData?.sunset[daysFromNow].slice(-5)}
-        </Text>
+        <Text>{weatherData?.sunset[daysFromNow].slice(-5)}</Text>
       </div>
     </div>
   );
