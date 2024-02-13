@@ -34,7 +34,7 @@ export function SearchResults({
 
 
   const filterHandler = () => {
-    setFilterFlag(filterFlag!);
+    setFilterFlag(!filterFlag);
   };
 
 

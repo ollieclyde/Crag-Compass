@@ -1,5 +1,4 @@
 import { useState, useEffect } from "react";
-import axios from "axios";
 
 import { TiWeatherSunny } from "react-icons/ti";
 import { TiWeatherDownpour } from "react-icons/ti";
@@ -7,11 +6,14 @@ import { FiSunset } from "react-icons/fi";
 import { FiSunrise } from "react-icons/fi";
 
 import { Text } from "@chakra-ui/react";
+import { WeatherDataDay } from "../types/types";
+import APIService from "../Api-client-service";
 
-const WeatherComponent = ({ lat, lon, date }): any => {
-  const [weatherData, setWeatherData] = useState(null);
+const WeatherComponent = ({ lat, lon, date }: { lat: string; lon: string; date: string }) => {
+  const [weatherData, setWeatherData] = useState<WeatherDataDay>();
+  const [daysFromNow, setDaysFromNow] = useState<number>(0);
 
-  const getDaysFromNow = (dateString: any) => {
+  const getDaysFromNow = (dateString: string): number => {
     const oneDay = 24 * 60 * 60 * 1000;
     const today = new Date();
     today.setHours(0, 0, 0, 0);
@@ -19,29 +21,21 @@ const WeatherComponent = ({ lat, lon, date }): any => {
     const providedDate = new Date(dateString);
     providedDate.setHours(0, 0, 0, 0);
 
-    const diffDays = Math.round(Math.abs((providedDate - today) / oneDay));
+    const diffDays = Math.round(Math.abs((+providedDate - +today) / oneDay));
     return diffDays;
   };
 
-  const daysFromNow = getDaysFromNow(date);
 
   useEffect(() => {
+    setDaysFromNow(getDaysFromNow(date));
+
     const url = `https://api.open-meteo.com/v1/forecast?latitude=${lat}&longitude=${lon}&hourly=temperature_2m,precipitation_probability,rain&daily=temperature_2m_max,temperature_2m_min,sunrise,sunset,precipitation_sum,rain_sum,precipitation_hours,precipitation_probability_max&timezone=GMT`;
 
-    const fetchWeather = async () => {
-      try {
-        const response = await axios.get(url);
-        const dailyForecasts = response.data.daily;
-        if (dailyForecasts) {
-          setWeatherData(dailyForecasts);
-        } else {
-          console.log("Forecast for the specific day not found.");
-        }
-      } catch (error) {
-        console.error("Error fetching weather data:", error);
+    APIService.fetchWeather(url).then((dailyForecasts: WeatherDataDay | undefined) => {
+      if (dailyForecasts) {
+        setWeatherData(dailyForecasts)
       }
-    };
-    fetchWeather();
+    })
   }, [lat, lon]);
 
   if (!weatherData) return <div>Loading...</div>;

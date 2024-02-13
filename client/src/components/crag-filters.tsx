@@ -1,15 +1,8 @@
 import {
-  Button,
-  Card,
-  CardBody,
   Text,
-  Divider,
-  CardHeader,
   Box,
   IconButton,
 } from "@chakra-ui/react";
-
-import { useState } from "react";
 
 import { TriangleDownIcon, TriangleUpIcon } from "@chakra-ui/icons";
 
@@ -18,6 +11,11 @@ export function CragFilters({
   handleRouteFilter,
   routeFlag,
   distanceFlag,
+}: {
+  handleDistanceFilter: Function;
+  handleRouteFilter: Function;
+  routeFlag: boolean;
+  distanceFlag: boolean;
 }) {
   return (
     <>
@@ -28,7 +26,7 @@ export function CragFilters({
             variant="none"
             className="filter-arrow-button"
             aria-label="Routes"
-            onClick={handleRouteFilter}
+            onClick={() => handleRouteFilter()}
             icon={<TriangleUpIcon />}
           />
         </Box>
@@ -39,7 +37,7 @@ export function CragFilters({
             variant="none"
             className="filter-arrow-button"
             aria-label="Routes"
-            onClick={handleRouteFilter}
+            onClick={() => handleRouteFilter()}
             icon={<TriangleDownIcon />}
           />
         </Box>
@@ -51,7 +49,7 @@ export function CragFilters({
             variant="none"
             className="filter-arrow-button"
             aria-label="Routes"
-            onClick={handleDistanceFilter}
+            onClick={() => handleDistanceFilter()}
             icon={<TriangleUpIcon />}
           />
         </Box>
@@ -62,7 +60,7 @@ export function CragFilters({
             variant="none"
             className="filter-arrow-button"
             aria-label="Routes"
-            onClick={handleDistanceFilter}
+            onClick={() => handleDistanceFilter()}
             icon={<TriangleDownIcon />}
           />
         </Box>

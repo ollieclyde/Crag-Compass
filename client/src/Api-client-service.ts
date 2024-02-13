@@ -1,9 +1,7 @@
 import axios from "axios";
-import { Crag } from "./types/types";
+import { Crag, WeatherDataDay } from "./types/types";
 
-const apiClientService: any = {};
-
-apiClientService.getAllCrags = async (
+const getAllCrags = async (
   lng: string,
   lat: string,
   maxDist: number[],
@@ -18,4 +16,19 @@ apiClientService.getAllCrags = async (
   }
 };
 
-export default apiClientService;
+const fetchWeather = async (url: string): Promise<WeatherDataDay | undefined> => {
+  try {
+    const response = await axios.get(url);
+    const dailyForecasts: WeatherDataDay = response.data.daily;
+    if (dailyForecasts) {
+      return dailyForecasts;
+    } else {
+      console.log("Forecast for the specific day not found.");
+      return undefined
+    }
+  } catch (error) {
+    console.error("Error fetching weather data:", error);
+  }
+};
+
+export default { fetchWeather, getAllCrags };

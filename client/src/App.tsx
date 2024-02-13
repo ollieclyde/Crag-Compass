@@ -25,7 +25,7 @@ import {
 import moment from "moment";
 import { Search2Icon } from "@chakra-ui/icons";
 import { Libraries, useLoadScript } from "@react-google-maps/api";
-import apiClientService from "./Api-client-service";
+import APIService from "./Api-client-service";
 import { Crag, Coords } from "./types/types";
 import { SearchResults } from "./components/search-results";
 import "./App.css";
@@ -67,14 +67,16 @@ function App() {
   const fetchCrags = async (lng: string, lat: string): Promise<void> => {
     try {
       if (currentCoords) {
-        const apiResults: Crag[] = await apiClientService.getAllCrags(
+        const apiResults: Crag[] | undefined = await APIService.getAllCrags(
           lng,
           lat,
           distRange,
         );
-        setCrags(apiResults);
-        const filtered = apiResults.filter((crag: Crag) => basicFilter(crag));
-        setFilteredCrags(filtered);
+        if (apiResults) {
+          setCrags(apiResults);
+          const filtered = apiResults.filter((crag: Crag) => basicFilter(crag));
+          setFilteredCrags(filtered);
+        }
       }
     } catch (error) {
       console.error("Error fetching crags:", error);
