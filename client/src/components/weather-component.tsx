@@ -9,7 +9,15 @@ import { Text } from "@chakra-ui/react";
 import { WeatherDataDay } from "../types/types";
 import APIService from "../Api-client-service";
 
-const WeatherComponent = ({ lat, lon, date }: { lat: string; lon: string; date: string }) => {
+const WeatherComponent = ({
+  lat,
+  lon,
+  date,
+}: {
+  lat: string;
+  lon: string;
+  date: string;
+}) => {
   const [weatherData, setWeatherData] = useState<WeatherDataDay>();
   const [daysFromNow, setDaysFromNow] = useState<number>(0);
 
@@ -25,17 +33,18 @@ const WeatherComponent = ({ lat, lon, date }: { lat: string; lon: string; date: 
     return diffDays;
   };
 
-
   useEffect(() => {
     setDaysFromNow(getDaysFromNow(date));
 
     const url = `https://api.open-meteo.com/v1/forecast?latitude=${lat}&longitude=${lon}&hourly=temperature_2m,precipitation_probability,rain&daily=temperature_2m_max,temperature_2m_min,sunrise,sunset,precipitation_sum,rain_sum,precipitation_hours,precipitation_probability_max&timezone=GMT`;
 
-    APIService.fetchWeather(url).then((dailyForecasts: WeatherDataDay | undefined) => {
-      if (dailyForecasts) {
-        setWeatherData(dailyForecasts)
-      }
-    })
+    APIService.fetchWeather(url).then(
+      (dailyForecasts: WeatherDataDay | undefined) => {
+        if (dailyForecasts) {
+          setWeatherData(dailyForecasts);
+        }
+      },
+    );
   }, [lat, lon]);
 
   if (!weatherData) return <div>Loading...</div>;

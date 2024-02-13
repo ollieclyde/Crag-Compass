@@ -1,8 +1,4 @@
-import {
-  Text,
-  Box,
-  IconButton,
-} from "@chakra-ui/react";
+import { Text, Box, IconButton } from "@chakra-ui/react";
 
 import { TriangleDownIcon, TriangleUpIcon } from "@chakra-ui/icons";
 

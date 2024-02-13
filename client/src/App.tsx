@@ -1,41 +1,19 @@
 import { useEffect, useState } from "react";
-import {
-  Checkbox,
-  IconButton,
-  CheckboxGroup,
-  Stack,
-  RangeSlider,
-  RangeSliderTrack,
-  RangeSliderFilledTrack,
-  RangeSliderThumb,
-  FormControl,
-  FormLabel,
-  Input,
-  Button,
-  Modal,
-  ModalOverlay,
-  ModalContent,
-  ModalHeader,
-  ModalFooter,
-  ModalBody,
-  ModalCloseButton,
-  useDisclosure,
-  Box,
-} from "@chakra-ui/react";
+import { useDisclosure } from "@chakra-ui/react";
 import moment from "moment";
-import { Search2Icon } from "@chakra-ui/icons";
 import { Libraries, useLoadScript } from "@react-google-maps/api";
 import APIService from "./Api-client-service";
 import { Crag, Coords } from "./types/types";
 import { SearchResults } from "./components/search-results";
 import "./App.css";
 import { GeocodeResult } from "use-places-autocomplete";
-
+import SearchModal from "./components/search-modal";
 
 const GoogleApiKey: string = import.meta.env.VITE_GOOGLE_API;
 const googleMapLibrary: Libraries = ["places"];
 
 function App() {
+
   const [crags, setCrags] = useState<Crag[]>([]);
   const [filteredCrags, setFilteredCrags] = useState<Crag[]>([]);
   const [location, setLocation] = useState<string>("London");
@@ -84,25 +62,29 @@ function App() {
   };
 
   // Use of Google Maps Geocode
-  const geocodeLocation = async (address: string): Promise<Coords | undefined> => {
+  const geocodeLocation = async (
+    address: string,
+  ): Promise<Coords | undefined> => {
     const geocoder = new google.maps.Geocoder();
     try {
-      const results: GeocodeResult[] | null = await new Promise((resolve, reject) => {
-        geocoder.geocode({ address: address }, (results, status) => {
-          if (status === "OK") {
-            resolve(results);
-          } else {
-            reject(status);
-          }
-        });
-      });
+      const results: GeocodeResult[] | null = await new Promise(
+        (resolve, reject) => {
+          geocoder.geocode({ address: address }, (results, status) => {
+            if (status === "OK") {
+              resolve(results);
+            } else {
+              reject(status);
+            }
+          });
+        },
+      );
       if (results && results[0]) {
         return {
           lat: results[0].geometry.location.lat().toString(),
           lng: results[0].geometry.location.lng().toString(),
         };
       } else {
-        return undefined
+        return undefined;
       }
     } catch (error) {
       console.error(
@@ -111,7 +93,10 @@ function App() {
     }
   };
 
-  const handleCheckboxChange = (setter: Function, values: (string | number)[]) => {
+  const handleCheckboxChange = (
+    setter: Function,
+    values: (string | number)[],
+  ) => {
     const flag = values.includes("all");
     if (values[0] === "all" && values.length > 1) {
       setter(values.filter((value) => value !== "all"));
@@ -120,13 +105,6 @@ function App() {
     } else {
       setter(["all"]);
     }
-  };
-
-  const handleDist = (values: number[]) => {
-    setDistRange(values);
-  };
-  const numOfRoutesHandler = (values: number[]) => {
-    setNumOfRoutes(values);
   };
 
   const searchHandler = async () => {
@@ -196,159 +174,26 @@ function App() {
               <h1 className="title-text"> Crag Compass</h1>
             </div>
           </div>
-          <div className="search-container">
-            <IconButton
-              className="search-icon"
-              aria-label="Search database"
-              background="transparent"
-              variant="none"
-              fontSize="2rem"
-              onClick={onOpen}
-              icon={<Search2Icon />}
-            />
-            <Modal
-              onClose={onClose}
-              size={"xl"}
-              isOpen={isOpen}
-              closeOnEsc
-              colorScheme="teal"
-              isCentered
-            >
-              <ModalOverlay />
-              <ModalContent>
-                <ModalHeader textAlign="center" pt="3rem">
-                  Crag Search
-                </ModalHeader>
-                <ModalCloseButton />
-                <ModalBody
-                  display="flex"
-                  flexDirection={"column"}
-                  gap="20px"
-                  className="modal-body"
-                >
-                  <FormControl className="form-content" isRequired>
-                    <FormLabel>Location</FormLabel>
-                    <Input
-                      isRequired={true}
-                      type="text"
-                      value={location}
-                      onChange={(event) => setLocation(event.target.value)}
-                      min={currentDateTime}
-                    />
-                  </FormControl>
-
-                  <FormControl className="form-content">
-                    <FormLabel>Depature Time</FormLabel>
-                    <Input
-                      type="datetime-local"
-                      onChange={(event) => setDepartureDate(event.target.value)}
-                      value={departureDate}
-                    />
-                  </FormControl>
-
-                  <FormControl className="form-content">
-                    <FormLabel>Climbing Type</FormLabel>
-                    <CheckboxGroup
-                      value={climbingType}
-                      onChange={(event) => handleCheckboxChange(setClimbingType, event)}
-                    >
-                      <Stack spacing={5} direction="row">
-                        <Checkbox value="all">All</Checkbox>
-                        <Checkbox value="bouldering">Bouldering</Checkbox>
-                        <Checkbox value="trad">Trad</Checkbox>
-                        <Checkbox value="sport">Sport</Checkbox>
-                      </Stack>
-                    </CheckboxGroup>
-                  </FormControl>
-
-                  <FormControl className="form-content">
-                    <FormLabel>Rock Type</FormLabel>
-                    <CheckboxGroup
-                      value={rockType}
-                      onChange={(event) => handleCheckboxChange(setRockType, event)}
-                    >
-                      <Stack spacing={5} direction="row">
-                        <Checkbox value="all">All</Checkbox>
-                        <Checkbox value="granite">Granite</Checkbox>
-                        <Checkbox value="limestone">Limestone</Checkbox>
-                        <Checkbox value="grit">Grit</Checkbox>
-                        <Checkbox value="artificial">Artificial</Checkbox>
-                        <Checkbox value="sandstone">Sandstone</Checkbox>
-                      </Stack>
-                    </CheckboxGroup>
-                  </FormControl>
-
-                  <FormControl className="form-content">
-                    <FormLabel pb="1rem">Routes</FormLabel>
-                    <RangeSlider
-                      aria-label={["min", "max"]}
-                      min={0}
-                      max={500}
-                      defaultValue={numOfRoutes}
-                      step={5}
-                      minStepsBetweenThumbs={1}
-                      onChange={(value) => setNumOfRoutes(value)}
-                    >
-                      <RangeSliderTrack>
-                        <RangeSliderFilledTrack />
-                      </RangeSliderTrack>
-                      <RangeSliderThumb index={0}>
-                        <Box className="grade-slider-value">
-                          <span>{numOfRoutes[0]}</span>
-                        </Box>
-                      </RangeSliderThumb>
-                      <RangeSliderThumb index={1}>
-                        <Box className="grade-slider-value">
-                          <span>
-                            {numOfRoutes[1] !== 500
-                              ? numOfRoutes[1]
-                              : numOfRoutes[1] + "+"}
-                          </span>
-                        </Box>
-                      </RangeSliderThumb>
-                    </RangeSlider>
-                  </FormControl>
-
-                  <FormControl className="form-content">
-                    <FormLabel pb="2rem">Distance</FormLabel>
-                    <RangeSlider
-                      aria-label={["min", "max"]}
-                      defaultValue={distRange}
-                      min={0}
-                      max={100}
-                      step={5}
-                      minStepsBetweenThumbs={1}
-                      onChange={(value) => setDistRange(value)}
-                    >
-                      <RangeSliderTrack>
-                        <RangeSliderFilledTrack />
-                      </RangeSliderTrack>
-                      <RangeSliderThumb index={0}>
-                        <Box className="distance-slider-value">
-                          {distRange[0] + "km"}
-                        </Box>
-                      </RangeSliderThumb>
-                      <RangeSliderThumb index={1}>
-                        <Box className="distance-slider-value">
-                          {distRange[1] + "km"}
-                        </Box>
-                      </RangeSliderThumb>
-                    </RangeSlider>
-                  </FormControl>
-                  <Button
-                    w="25%"
-                    type="button"
-                    ml="12rem"
-                    mt="1rem"
-                    onClick={searchHandler}
-                  >
-                    Search
-                  </Button>
-                </ModalBody>
-                <ModalFooter></ModalFooter>
-              </ModalContent>
-            </Modal>
-          </div>
+          <SearchModal
+            location={location}
+            setLocation={setLocation}
+            departureDate={departureDate}
+            setDepartureDate={setDepartureDate}
+            climbingType={climbingType}
+            setClimbingType={setClimbingType}
+            rockType={rockType}
+            setRockType={setRockType}
+            numOfRoutes={numOfRoutes}
+            setNumOfRoutes={setNumOfRoutes}
+            distRange={distRange}
+            setDistRange={setDistRange}
+            searchHandler={searchHandler}
+            isOpen={isOpen}
+            onOpen={onOpen}
+            onClose={onClose}
+            handleCheckboxChange={handleCheckboxChange}
+            currentDateTime={currentDateTime}
+          />
         </nav>
         <section className="main-content">
           <SearchResults
@@ -364,21 +209,6 @@ function App() {
 }
 
 export default App;
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 /*
 Code to deal with driving distance and grades

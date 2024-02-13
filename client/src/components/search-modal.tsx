@@ -1,4 +1,3 @@
-import { useEffect, useState } from "react";
 import {
   Checkbox,
   IconButton,
@@ -19,21 +18,32 @@ import {
   ModalFooter,
   ModalBody,
   ModalCloseButton,
-  useDisclosure,
   Box,
 } from "@chakra-ui/react";
-import moment from "moment";
 import { Search2Icon } from "@chakra-ui/icons";
-import { Libraries, useLoadScript } from "@react-google-maps/api";
-import APIService from "./Api-client-service";
-import { Crag, Coords } from "../types/types";
-import { SearchResults } from "./search-results";
-import "./App.css";
-import { GeocodeResult } from "use-places-autocomplete";
+import { SearchModalProps } from "../types/types";
+import "../App.css";
 
-const SearchModal = ({ location, setLocation, departureDate, setDepartureDate, climbingType, setClimbingType, rockType, setRockType, numOfRoutes, setNumOfRoutes, distRange, setDistRange, searchHandler }) => {
-
-
+const SearchModal: React.FC<SearchModalProps> = ({
+  location,
+  setLocation,
+  departureDate,
+  setDepartureDate,
+  climbingType,
+  setClimbingType,
+  rockType,
+  setRockType,
+  numOfRoutes,
+  setNumOfRoutes,
+  distRange,
+  setDistRange,
+  searchHandler,
+  handleCheckboxChange,
+  currentDateTime,
+  onOpen,
+  isOpen,
+  onClose,
+}) => {
   return (
     <div className="search-container">
       <IconButton
@@ -89,7 +99,9 @@ const SearchModal = ({ location, setLocation, departureDate, setDepartureDate, c
               <FormLabel>Climbing Type</FormLabel>
               <CheckboxGroup
                 value={climbingType}
-                onChange={(event) => handleCheckboxChange(setClimbingType, event)}
+                onChange={(event) =>
+                  handleCheckboxChange(setClimbingType, event)
+                }
               >
                 <Stack spacing={5} direction="row">
                   <Checkbox value="all">All</Checkbox>

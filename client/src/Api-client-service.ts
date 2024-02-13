@@ -16,7 +16,9 @@ const getAllCrags = async (
   }
 };
 
-const fetchWeather = async (url: string): Promise<WeatherDataDay | undefined> => {
+const fetchWeather = async (
+  url: string,
+): Promise<WeatherDataDay | undefined> => {
   try {
     const response = await axios.get(url);
     const dailyForecasts: WeatherDataDay = response.data.daily;
@@ -24,7 +26,7 @@ const fetchWeather = async (url: string): Promise<WeatherDataDay | undefined> =>
       return dailyForecasts;
     } else {
       console.log("Forecast for the specific day not found.");
-      return undefined
+      return undefined;
     }
   } catch (error) {
     console.error("Error fetching weather data:", error);

@@ -45,3 +45,24 @@ export type WeatherDataDay = {
   temperature_2m_min: number[];
   time: string[];
 };
+
+export type SearchModalProps = {
+  location: string;
+  setLocation: Function;
+  departureDate: string;
+  setDepartureDate: Function;
+  climbingType: string[];
+  setClimbingType: Function;
+  rockType: string[];
+  setRockType: Function;
+  numOfRoutes: number[];
+  setNumOfRoutes: Function;
+  distRange: number[];
+  setDistRange: Function;
+  handleCheckboxChange: Function;
+  currentDateTime: string;
+  searchHandler: () => Promise<void>;
+  onOpen: () => void;
+  isOpen: boolean;
+  onClose: () => void;
+};
