@@ -31,7 +31,7 @@ import { SearchResults } from "./search-results";
 import "./App.css";
 import { GeocodeResult } from "use-places-autocomplete";
 
-const SearchModal = ({ location, setLocation, departureDate, setDepartureDate, climbingType, setClimbingType, rockType, setRockType, numOfRoutes,numOfRoutesHandler}) => {
+const SearchModal = ({ location, setLocation, departureDate, setDepartureDate, climbingType, setClimbingType, rockType, setRockType, numOfRoutes, setNumOfRoutes, distRange, setDistRange, searchHandler }) => {
 
 
   return (
@@ -126,7 +126,7 @@ const SearchModal = ({ location, setLocation, departureDate, setDepartureDate, c
                 defaultValue={numOfRoutes}
                 step={5}
                 minStepsBetweenThumbs={1}
-                onChange={numOfRoutesHandler}
+                onChange={(value) => setNumOfRoutes(value)}
               >
                 <RangeSliderTrack>
                   <RangeSliderFilledTrack />
@@ -157,7 +157,7 @@ const SearchModal = ({ location, setLocation, departureDate, setDepartureDate, c
                 max={100}
                 step={5}
                 minStepsBetweenThumbs={1}
-                onChange={handleDist}
+                onChange={(value) => setDistRange(value)}
               >
                 <RangeSliderTrack>
                   <RangeSliderFilledTrack />

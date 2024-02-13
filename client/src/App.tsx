@@ -232,7 +232,7 @@ function App() {
                       isRequired={true}
                       type="text"
                       value={location}
-                      onChange={(e) => setLocation(e.target.value)}
+                      onChange={(event) => setLocation(event.target.value)}
                       min={currentDateTime}
                     />
                   </FormControl>
@@ -287,7 +287,7 @@ function App() {
                       defaultValue={numOfRoutes}
                       step={5}
                       minStepsBetweenThumbs={1}
-                      onChange={numOfRoutesHandler}
+                      onChange={(value) => setNumOfRoutes(value)}
                     >
                       <RangeSliderTrack>
                         <RangeSliderFilledTrack />
@@ -318,7 +318,7 @@ function App() {
                       max={100}
                       step={5}
                       minStepsBetweenThumbs={1}
-                      onChange={handleDist}
+                      onChange={(value) => setDistRange(value)}
                     >
                       <RangeSliderTrack>
                         <RangeSliderFilledTrack />
