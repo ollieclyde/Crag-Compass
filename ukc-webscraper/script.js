@@ -150,17 +150,19 @@ const parseTableRow = async (item, page) => {
 
   try {
     const pageURL =
-      "https://www.ukclimbing.com/logbook/crags/?location=Leeds&distance=50";
+      "https://www.ukclimbing.com/logbook/crags/?location=London&distance=50";
     const searchResults = await search(browser, pageURL);
 
     if (searchResults && searchResults.length > 0) {
-      for (const result of searchResults) {
-        try {
-          await axios.post("http://localhost:3000/crags", { crag: result });
-        } catch (err) {
-          console.error("Error posting data to the server:", err);
-        }
-      }
+      //   for (const result of searchResults) {
+      //     try {
+      //       await axios.post("http://localhost:3000/crags", { crag: result });
+      //     } catch (err) {
+      //       console.error("Error posting data to the server:", err);
+      //     }
+      // }
+
+      console.log(searchResults)
     } else {
       console.log("No elements found or an error occurred.");
     }

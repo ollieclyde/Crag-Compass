@@ -8,7 +8,7 @@ const getAllCrags = async (
 ): Promise<Crag[] | undefined> => {
   try {
     const allCrags = await axios.get(
-      `http://localhost:3000/crags/${lng}/${lat}/${maxDist}`,
+      `http://localhost:3000/crags/lng/${lng}/lat/${lat}/dist/${maxDist}`,
     );
     return allCrags.data;
   } catch (err) {
