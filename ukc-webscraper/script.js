@@ -113,7 +113,6 @@ const parseTableRow = async (item, page) => {
       for (let j = 0; j < climbingTypes.length; j++) {
         const item = await page.evaluate((el) => {
           const title = el.getAttribute("title");
-          console.log(title, "title");
           if (title === "Bouldering") return 1;
           if (title === "Trad") return 2;
           if (title === "Sport") return 3;

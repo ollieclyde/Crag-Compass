@@ -11,7 +11,8 @@ export interface CragType {
   rockType: string | null;
   routes: string | null;
   ukcUrl: string | null;
-  updatedAt: Date;
-  climbingTypes?: number[];
+  climbingTypes: number[];
 };
+
+
 
