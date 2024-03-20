@@ -1,8 +1,6 @@
 import { Request, Response } from "express";
-import { Crag, ClimbingType } from "../models/index";
-import { CragType } from "../types/types";
-
-
+import prisma from "../models/db";
+import { Crag } from "../types/types";
 
 function getDistanceFromLatLonInKm(
   lat1: number,
@@ -32,12 +30,10 @@ function deg2rad(deg: number) {
 const getCrags = async function (req: Request, res: Response) {
   try {
     const { lng, lat, distance } = req.params;
-
     // get the minimum and maximum distance
     const distanceSplit = distance.split(",");
-
     // return all the crags in the db and all the assosiated climbingTypes
-    const allCrags: Crag[] = await Crag.findAll({ include: "climbingTypes" });
+    const allCrags: Crag[] = await prisma.crag.findMany({ include: "climbingTypes" });
 
     // filter out the crags which are not within the KMs specified
     const filteredCrags = allCrags.filter((crag: Crag) => {
@@ -55,7 +51,6 @@ const getCrags = async function (req: Request, res: Response) {
         }
       }
     });
-    console.log(filteredCrags[0])
 
     // add the calculated distance to the crag database
     const filteredCragsAndKMDistance = filteredCrags.map((crag: Crag) => {

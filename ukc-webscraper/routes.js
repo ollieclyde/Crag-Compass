@@ -2,6 +2,7 @@ const puppeteer = require("puppeteer");
 
 class Route {
   constructor() {
+    this.id = null;
     this.name = null;
     this.grade = null;
     this.climbingType = null;
@@ -9,11 +10,77 @@ class Route {
     this.logs = null;
   }
 }
+class CragInfo {
+  constructor() {
+    this.crag_id = null;
+    this.img = null;
+    this.features = null;
+    this.approach = null;
+    this.accessType = null;
+    this.accessNotes = null;
+  }
+}
 
-const getRoutes = async (page, pageURL) => {
+const evaluateCrag = async (page, pageURL) => {
   await page.goto(pageURL, { waitUntil: "domcontentloaded" });
-  await page.waitForSelector("#table_container");
+  const cragInfo = new CragInfo
+  let imageFlag = true;
 
+  try {
+    await page.waitForSelector("#crag_thumb");
+  } catch (err) {
+    imageFlag = false;
+  }
+
+  if (imageFlag) {
+    const cragThumb = await page.$("#crag_thumb");
+    const imgEl = await cragThumb.$("img")
+    if (!imgEl) {
+      cragInfo.img = null;
+    } else {
+      cragInfo.img = await page.evaluate((el) => el.getAttribute("src"), imgEl);
+    }
+  }
+
+  const featuresEl = await page.$("#features_info");
+  if (!featuresEl) {
+    cragInfo.features = null;
+  } else {
+    const features = await page.evaluate((el) => el.innerText, featuresEl);
+    cragInfo.features = features.replace(/\n/g, " ").replace('Crag features', " ").trim();
+  }
+
+  const approachEl = await page.$("#approach_info");
+  if (!approachEl) {
+    cragInfo.approach = null;
+  } else {
+    const approach = await page.evaluate((el) => el.innerText, approachEl);
+    cragInfo.approach = approach.replace(/\n/g, " ").replace('Approach notes', " ").trim();
+  }
+
+  const accessNotesEl = await page.$("#access_notes");
+  const accessNotes = await page.evaluate((el) => el.innerText, accessNotesEl);
+  cragInfo.accessNotes = accessNotes.replace(/\n/g, " ").replace('Get the BMC RAD app', "").trim();
+
+  if (accessNotes.includes("Access Banned")) {
+    cragInfo.accessType = 3
+    cragInfo.accessNotes = accessNotes.replace(/\n/g, " ").replace(/\t/g, " ").split('Click here for RAD Access Notes')[0].split('.st1')[0].slice(1).trim();
+  } else if (accessNotes.includes("Restricted Access")) {
+    cragInfo.accessType = 2
+    cragInfo.accessNotes = accessNotes.replace(/\n/g, " ").replace(/\t/g, " ").split('Click here for RAD Access Notes')[0].split('.st1')[0].slice(1).trim();
+  } else if (accessNotes.includes("Access Advice")) {
+    cragInfo.accessType = 1
+    cragInfo.accessNotes = accessNotes.replace(/\n/g, " ").replace(/\t/g, " ").split('Click here for RAD Access Notes')[0].split('.st1')[0].trim().slice(1).trim();
+  } else {
+    cragInfo.accessType = 0
+    cragInfo.accessNotes = 'No Access Issues'
+  }
+  return cragInfo
+  // const routes = getRoutes(page);
+}
+
+const getRoutes = async (page) => {
+  await page.waitForSelector("#table_container");
   const tableContainer = await page.$("#table_container");
   const table = await tableContainer.$("tbody");
   const routes = await table.$$("tr");
@@ -42,10 +109,10 @@ const getRoutes = async (page, pageURL) => {
         const iElement = await cols[i].$("i");
         route.climbingType = await page.evaluate((el) => {
           const title = el.getAttribute("title");
-          console.log(title, 'title')
-          if (title === "Bouldering") return 1;
-          if (title === "Trad") return 2;
-          if (title === "Sport") return 3;
+          if (!title) return 1;
+          if (title === "Bouldering") return 2;
+          if (title === "Trad") return 3;
+          if (title === "Sport") return 4;
         }, iElement);
       } else if (i === 6) {
         route.logs = await page.evaluate((el) => el.innerText, cols[i])
@@ -62,13 +129,16 @@ const getRoutes = async (page, pageURL) => {
   try {
     const page = await browser.newPage()
     const pageURL =
-      "https://www.ukclimbing.com/logbook/crags/curbar_edge-21/";
+      "https://www.ukclimbing.com/logbook/crags/gun_cliff-793/";
 
-    const res = await getRoutes(page, pageURL)
+    const res = await evaluateCrag(page, pageURL)
     console.log(res)
 
   } catch (err) {
+    const error = new CragInfo()
+    error.id = null;
     console.error("Error in main block:", err);
+    return error
   } finally {
     await browser.close();
   }

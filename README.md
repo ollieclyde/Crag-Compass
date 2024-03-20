@@ -28,7 +28,7 @@ Crag Compass is an innovative web application designed to assist climbers in dis
 
 - Move into server folder: `cd server`
 - Run `npm i`
-- Change any config information in the .config.js file, such as username and password for you PostgreSQL account - ensure you have PostGreSQL set up
+- Change any config information in the .config.js file, such as username and password for you PostgreSQL account - ensure you have Postgresql set up
 - To run the server: `npm run dev`
 
 ### Webscraper

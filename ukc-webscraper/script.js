@@ -11,35 +11,11 @@ class SearchRes {
     this.country = null;
     this.osx = null;
     this.osy = null;
-    this.ukcURL = null;
-    this.climbingTypes = [];
-  }
-}
-
-class CragInfo {
-  constructor(name, location, country, ukcURL, osx, osy) {
-    this.name = name;
-    this.climbs = null;
-    this.location = location;
-    this.country = country;
-    this.ukcURL = ukcURL;
-    this.rocktype = null;
-    this.altitude = null;
     this.faces = null;
-    this.googleURL = null;
-    this.osx = osx;
-    this.osy = osy;
-    this.routes = [];
-  }
-}
-
-class Route {
-  constructor(name) {
-    this.cragName = name;
-    this.routeName = null;
-    this.grade = null;
-    this.stars = null;
-    this.type = null;
+    this.ukcURL = null;
+    this.rocktype = null;
+    this.climbingTypes = [];
+    this.routeCount = null;
   }
 }
 
@@ -78,7 +54,7 @@ const parseTableRow = async (item, page) => {
   for (let i = 0; i < allClasses.length; i++) {
     if (i === 1) {
       const routes = await page.evaluate((el) => el.innerText, allClasses[i]);
-      newSearchRes.routes = +routes;
+      newSearchRes.routeCount = +routes;
       const facesElement = await allClasses[i].$("span.d-md-none");
       const facesAndArtificial = await page.evaluate(
         (el) => el.innerText,
@@ -113,9 +89,10 @@ const parseTableRow = async (item, page) => {
       for (let j = 0; j < climbingTypes.length; j++) {
         const item = await page.evaluate((el) => {
           const title = el.getAttribute("title");
-          if (title === "Bouldering") return 1;
-          if (title === "Trad") return 2;
-          if (title === "Sport") return 3;
+          if (!title) return 1;
+          if (title === "Bouldering") return 2;
+          if (title === "Trad") return 3;
+          if (title === "Sport") return 4;
         }, climbingTypes[j]);
 
         if (item) {
@@ -269,14 +246,4 @@ const searchCragURL = async (browser, crags) => {
     console.error(`An error occurred while scraping all crags:`, error);
     return null;
   }
-};
-
-const getGoogleMapURL = async (page) => {
-  await page.click("a#show_map");
-  const OSRefEl = await page.$("a.btn.btn-default.btn-sm");
-  const OSRefURL = await page.evaluate(
-    (OSRefEl) => OSRefEl.getAttribute("href"),
-    OSRefEl,
-  );
-  return OSRefEl;
 };

@@ -1,11 +1,11 @@
 import express from "express";
-import controller from "./controller/controller";
+import GetCrags from "./controllers/GetCrags";
+import PostCrags from "./controllers/PostCrags";
 
 const router = express.Router();
 
-//IS THIS OKAY PRACTIC TO SIMPLY HAVE THE PARAMS STACKED LIKE THIS OR SHOULD THEY BE BROKEN UP?
-router.get("/crags/lng/:lng/lat/:lat/dist/:distance", controller.getCrags);
+router.get("/crags/lng/:lng/lat/:lat/dist/:distance", GetCrags.getCrags);
 
-router.post("/crags", controller.postCrags);
+router.post("/crags", PostCrags.postCrags);
 
 export default router;
