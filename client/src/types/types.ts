@@ -1,6 +1,6 @@
 export type ClimbingType = {
   id: number;
-  climbingType: string;
+  name: string;
 };
 
 export type SearchValues = {
@@ -19,19 +19,17 @@ export type Coords = {
 
 export type Crag = {
   country: string;
-  cragName: string;
-  createdAt: string;
+  name: string;
   distance: number;
   faces: string;
-  id: number;
+  cragID: number;
   location: string;
   osx: string;
   osy: string;
   rockType: string;
-  routes: string;
-  ukcUrl: string;
-  updatedAt: string;
-  climbingTypes: ClimbingType[];
+  routeCount: string;
+  ukcURL: string;
+  climbingType: ClimbingType[];
 };
 
 export type WeatherDataDay = {

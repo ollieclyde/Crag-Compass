@@ -16,6 +16,7 @@ function App() {
 
   const [crags, setCrags] = useState<Crag[]>([]);
   const [filteredCrags, setFilteredCrags] = useState<Crag[]>([]);
+  
   const [location, setLocation] = useState<string>("London");
   const [currentLocation, setCurrentLocation] = useState<string>("London");
   const [currentCoords, setCurrentCords] = useState<Coords>({
@@ -132,10 +133,10 @@ function App() {
     // check that the crag has the correct number of routes
     const minRoutes = +numOfRoutes[0];
     const maxRoutes = +numOfRoutes[1] !== 500 ? +numOfRoutes[1] : 1000000;
-    if (crag.routes === "?") {
+    if (crag.routeCount === "?") {
       return false;
     }
-    if (+crag.routes < minRoutes || +crag.routes > maxRoutes) {
+    if (+crag.routeCount < minRoutes || +crag.routeCount > maxRoutes) {
       return false;
     }
     // check that the crag has the correct rocktype
@@ -148,8 +149,8 @@ function App() {
     if (!climbingType.includes("all")) {
       let flag = false;
       for (let type of climbingType) {
-        for (let i = 0; i < crag.climbingTypes.length; i++) {
-          if (crag.climbingTypes[i].climbingType.toLowerCase() === type) {
+        for (let i = 0; i < crag.climbingType.length; i++) {
+          if (crag.climbingType[i].name.toLowerCase() === type) {
             flag = true;
           }
         }

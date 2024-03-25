@@ -1,31 +1,6 @@
 import { Request, Response } from "express";
 import prisma from "../models/db";
-import { Crag } from "../types/types";
-
-function getDistanceFromLatLonInKm(
-  lat1: number,
-  lon1: number,
-  lat2: number,
-  lon2: number,
-) {
-  var R = 6371;
-  var dLat = deg2rad(lat2 - lat1);
-  var dLon = deg2rad(lon2 - lon1);
-  var a =
-    Math.sin(dLat / 2) * Math.sin(dLat / 2) +
-    Math.cos(deg2rad(lat1)) *
-    Math.cos(deg2rad(lat2)) *
-    Math.sin(dLon / 2) *
-    Math.sin(dLon / 2);
-  var c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
-  var d = R * c;
-
-  return d;
-}
-
-function deg2rad(deg: number) {
-  return deg * (Math.PI / 180);
-}
+import { Crag } from "@prisma/client";
 
 const getCrags = async function (req: Request, res: Response) {
   try {
@@ -33,7 +8,11 @@ const getCrags = async function (req: Request, res: Response) {
     // get the minimum and maximum distance
     const distanceSplit = distance.split(",");
     // return all the crags in the db and all the assosiated climbingTypes
-    const allCrags: Crag[] = await prisma.crag.findMany({ include: "climbingTypes" });
+    const allCrags: Crag[] = await prisma.crag.findMany({
+      include: {
+        climbingType: true
+      }
+    });
 
     // filter out the crags which are not within the KMs specified
     const filteredCrags = allCrags.filter((crag: Crag) => {
@@ -56,7 +35,7 @@ const getCrags = async function (req: Request, res: Response) {
     const filteredCragsAndKMDistance = filteredCrags.map((crag: Crag) => {
       if (crag.osy && crag.osx) {
         return {
-          ...crag.dataValues,
+          ...crag,
           distance: Math.ceil(
             getDistanceFromLatLonInKm(+lat, +lng, +crag.osy, +crag.osx),
           ),
@@ -73,55 +52,54 @@ const getCrags = async function (req: Request, res: Response) {
   }
 };
 
-// Function to be able to post the crag data to the database
-const postCrags = async function (req: Request, res: Response) {
+
+const getAll = async (req: Request, res: Response) => {
+
   try {
-    const { crag }: { crag: CragType } = req.body;
-
-    if (crag?.cragName && crag.country === "England") {
-      // checks whether that crag is alread in the database
-      const existingCrag = await Crag.findOne({
-        where: {
-          cragName: crag.cragName,
-          osx: crag.osx,
-          osy: crag.osy,
-        },
-      });
-
-      // add crag if it is not
-      if (!existingCrag) {
-        const newCrag = await Crag.create({
-          cragName: crag.cragName,
-          location: crag.location,
-          country: crag.country,
-          osx: crag.osx,
-          osy: crag.osy,
-          ukcUrl: crag.ukcUrl,
-          routes: crag.routes,
-          rockType: crag.rockType,
-          faces: crag.faces,
-        });
-
-        const climbingTypeID: number[] | undefined = crag.climbingTypes;
-        if (climbingTypeID) {
-          await newCrag.addClimbingTypes(climbingTypeID);
-        }
-      } else {
-        res.status(204).json({ message: "Crag already exists" });
+    const allCrags: Crag[] = await prisma.crag.findMany({
+      include: {
+        climbingType: true
       }
-      res.status(200).json({ message: "Crag added successfully" });
-    } else {
-      res.status(204).json({ message: "Crag undefined or not in England" });
-    }
+    });
+    res.status(200).json(allCrags);
   } catch (err) {
     console.error(err, "error");
-    res.status(500).json({ error: { code: 500, msg: "An error occurred." } });
+    res
+      .status(500)
+      .json({ data: null, error: { code: 500, msg: "An error occurred." } });
   }
-};
+}
+
+
+function getDistanceFromLatLonInKm(
+  latStart: number,
+  lonStart: number,
+  latEnd: number,
+  lonEnd: number,
+) {
+  var R = 6371;
+  var dLat = deg2rad(latEnd - latStart);
+  var dLon = deg2rad(lonEnd - lonStart);
+  var a =
+    Math.sin(dLat / 2) * Math.sin(dLat / 2) +
+    Math.cos(deg2rad(latStart)) *
+    Math.cos(deg2rad(latEnd)) *
+    Math.sin(dLon / 2) *
+    Math.sin(dLon / 2);
+  var c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+  var d = R * c;
+
+  return d;
+}
+
+function deg2rad(deg: number) {
+  return deg * (Math.PI / 180);
+}
+
 
 const controller = {
   getCrags,
-  postCrags,
+  getAll
 };
 
 export default controller;

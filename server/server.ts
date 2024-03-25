@@ -19,7 +19,7 @@ app.get("*", (req, res) => {
 
 async function run() {
   app.listen(port, () => {
-    console.log(`🚀 Server running at http://localhost:${port}/`); // eslint-disable-line no-console
+    console.log(`🚀 Server running at http://localhost:${port}/`); 
   });
 }
 

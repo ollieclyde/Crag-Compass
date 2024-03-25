@@ -7,21 +7,21 @@ export interface Crag {
   osy: string;
   rockType: string;
   routeCount: number;
-  ukcUrl: string;
+  ukcURL: string;
   climbingTypes: number[];
 };
 
 export interface CragInfo {
-  crag_id: number;
+  cragID: number;
   img: string;
   features: string;
   approach: string;
-  accessType: string;
-  accessNotes: string;
+  accessType: number;
+  accessNote: string;
 }
 
 export interface Route {
-  crag_id: number;
+  cragID: number;
   name: string;
   grade: string;
   climbingType: number;

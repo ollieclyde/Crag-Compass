@@ -14,52 +14,52 @@ datasource db {
 }
 
 model Crag {
-  crag_id         Int    @id @unique @default(autoincrement())
-  name            String
-  location        String
-  country         String
-  ukc_url         String
-  faces           String
-  osx             String
-  osy             String
-  route_count     Int
-  rock_type       String
+  cragID     Int    @id @unique @default(autoincrement())
+  name       String
+  location   String
+  country    String
+  ukcURL     String
+  faces      String
+  osx        String
+  osy        String
+  routeCount Int
+  rockType   String
 
   routes   Route[]
   cragInfo CragInfo?
 
-  climbing_type    ClimbingType[]
+  climbingType ClimbingType[]
 }
 
 model ClimbingType {
-  climbing_type_id Int     @id @unique @default(autoincrement())
-  name             String
-  crag             Crag[]
-  route            Route[]
+  climbingTypeID Int     @id @unique @default(autoincrement())
+  name           String
+  crag           Crag[]
+  route          Route[]
 }
 
 model CragInfo {
-  crag_info_id Int    @id @default(autoincrement())
-  img          String
-  features     String
-  approach     String
-  accessType   Int
-  accessNotes  String
+  cragInfoID  Int    @id @default(autoincrement())
+  img         String
+  features    String
+  approach    String
+  accessType Int
+  accessNote String
 
-  crag_id Int  @unique
-  crag    Crag @relation(fields: [crag_id], references: [crag_id])
+  cragID Int  @unique
+  crag   Crag @relation(fields: [cragID], references: [cragID])
 }
 
 model Route {
-  route_id Int    @id @unique @default(autoincrement())
-  name     String
-  grade    String
-  stars    Int
-  logs     Int
+  routeID Int    @id @unique @default(autoincrement())
+  name    String
+  grade   String
+  stars   Int
+  logs    Int
 
-  crag_id Int
-  crag    Crag @relation(fields: [crag_id], references: [crag_id])
+  cragID Int
+  crag   Crag @relation(fields: [cragID], references: [cragID])
 
-  climbing_type_id Int          @unique
-  climbing_type    ClimbingType @relation(fields: [climbing_type_id], references: [climbing_type_id])
+  climbingTypeID Int
+  climbingType   ClimbingType @relation(fields: [climbingTypeID], references: [climbingTypeID])
 }

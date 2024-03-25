@@ -13,13 +13,13 @@ class SearchRes {
     this.osy = null;
     this.faces = null;
     this.ukcURL = null;
-    this.rocktype = null;
+    this.rockType = null;
     this.climbingTypes = [];
     this.routeCount = null;
   }
 }
 
-const search = async function (browser, pageUrl) {
+const search = async (browser, pageUrl) => {
   try {
     const page = await browser.newPage();
     await page.goto(pageUrl, { waitUntil: "domcontentloaded" });
@@ -64,7 +64,7 @@ const parseTableRow = async (item, page) => {
         .replaceAll("\n", "")
         .replaceAll("\t", "")
         .split("Rock:");
-      newSearchRes.rocktype =
+      newSearchRes.rockType =
         newRockType[1] !== "-" ? newRockType[1].toLowerCase() : "unknown";
       const newFaces = newRockType[0].split(" ")[1];
       newSearchRes.faces = newFaces !== "-" ? newFaces : "unknown";
@@ -93,6 +93,7 @@ const parseTableRow = async (item, page) => {
           if (title === "Bouldering") return 2;
           if (title === "Trad") return 3;
           if (title === "Sport") return 4;
+          if(title === "Top Rope") return 5;
         }, climbingTypes[j]);
 
         if (item) {
@@ -130,15 +131,13 @@ const parseTableRow = async (item, page) => {
     const searchResults = await search(browser, pageURL);
 
     if (searchResults && searchResults.length > 0) {
-      //   for (const result of searchResults) {
-      //     try {
-      //       await axios.post("http://localhost:3000/crags", { crag: result });
-      //     } catch (err) {
-      //       console.error("Error posting data to the server:", err);
-      //     }
-      // }
-
-      console.log(searchResults)
+      for (const result of searchResults) {
+        try {
+          await axios.post("http://localhost:3000/addCrag", { crag: result });
+        } catch (err) {
+          console.error("Error posting data to the server:", err);
+        }
+      }
     } else {
       console.log("No elements found or an error occurred.");
     }
@@ -148,102 +147,3 @@ const parseTableRow = async (item, page) => {
     await browser.close();
   }
 })();
-
-// Code to take the individual page of the crag and harvest individual routes information - now out of date will mostly need to be rewritten
-const searchCragURL = async (browser, crags) => {
-  try {
-    const cragPromises = crags.map(async (crag) => {
-      const page = await browser.newPage();
-      try {
-        await page.goto(baseURL + crag.ukcURL, {
-          waitUntil: "domcontentloaded",
-        });
-        const cragInfo = new CragInfo(
-          crag.cragName,
-          crag.location,
-          crag.country,
-          crag.ukcURL,
-          crag.osx,
-          crag.osy,
-        );
-        const header = await page.$("p");
-        const headerText = await page.evaluate((p) => p?.innerText, header);
-        const splitHeaderText = headerText.split("\n");
-
-        if (splitHeaderText) {
-          cragInfo.climbs = splitHeaderText[0]
-            ? splitHeaderText[0].split(" ")[1]
-            : null;
-          cragInfo.rocktype = splitHeaderText[1]
-            ? splitHeaderText[1].split(" ")[1]
-            : null;
-          cragInfo.altitude = splitHeaderText[2]
-            ? splitHeaderText[2].split(" ")[1] + " a.s.l"
-            : null;
-          cragInfo.faces = splitHeaderText[3]
-            ? splitHeaderText[3].split(" ")[1]
-            : null;
-        }
-
-        const tableWrapper = await page.$("div#table_container");
-        const table = await tableWrapper.$("tbody");
-        const routes = await table.$$("tr");
-
-        const loopRoutes = async (routes) => {
-          const climbs = [];
-          for (let item of routes) {
-            const routeName = await item.$("td.datatable_column_name");
-            if (routeName) {
-              const route = new Route(crag.name);
-              const routeName = await item.$("td.datatable_column_name");
-              route.routeName = await page.evaluate(
-                (routeName) => routeName.innerText,
-                routeName,
-              );
-
-              const grade = await item.$(
-                "td.datatable_column_grade.small.not-small-md",
-              );
-              route.grade = await page.evaluate(
-                (grade) => grade.innerText,
-                grade,
-              );
-
-              const stars = await item.$("td.datatable_column_star i");
-              if (stars) {
-                starsStr = await page.evaluate(
-                  (stars) => stars.getAttribute("title"),
-                  stars,
-                );
-                route.stars = +starsStr.split(" ")[0];
-              } else {
-                route.stars = 0;
-              }
-
-              const type = await item.$("td.datatable_column_type i");
-              route.type = await page.evaluate(
-                (type) => type.getAttribute("title"),
-                type,
-              );
-              climbs.push(route);
-            }
-          }
-          return climbs;
-        };
-
-        const climbs = await loopRoutes(routes);
-        cragInfo.routes = climbs;
-
-        return cragInfo;
-      } catch (error) {
-        console.error(`An error occurred while scraping ${crag}`, error);
-      }
-    });
-
-    const results = await Promise.all(cragPromises);
-    return results.filter((r) => r !== undefined);
-  } catch (error) {
-    console.error(`An error occurred while scraping all crags:`, error);
-    return null;
-  }
-};

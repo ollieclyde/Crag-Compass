@@ -41,7 +41,7 @@ export function SearchResults({
     const cragsToSort = [...filteredCrags];
 
     const sortedFilteredCrags = cragsToSort.sort((a, b) => {
-      return routeFlag ? +a.routes - +b.routes : +b.routes - +a.routes;
+      return routeFlag ? +a.routeCount - +b.routeCount : +b.routeCount - +a.routeCount;
     });
 
     setFilteredCrags(sortedFilteredCrags);
@@ -64,6 +64,7 @@ export function SearchResults({
 
   useEffect(() => {
     const slicedCrags: Crag[] = filteredCrags.slice(0, 10);
+    console.log(filteredCrags, "filteredCrags");
 
     setCurrentPageCrags(slicedCrags);
   }, [filteredCrags, distanceFlag, routeFlag]);
@@ -126,7 +127,7 @@ export function SearchResults({
           ? currentPageCrags.map((crag: Crag) => (
               <Card
                 className="crag-card"
-                key={crag.id}
+                key={crag.cragID}
                 direction={{ base: "column", sm: "row" }}
                 justify="start"
                 overflow="hidden"
@@ -141,7 +142,7 @@ export function SearchResults({
                   <Box className="card-header-text">
                     <Text as="b" fontSize="larger">
                       {" "}
-                      {crag.cragName}{" "}
+                      {crag.name}{" "}
                     </Text>
                     <Text> {crag.location} </Text>
                     <Text> {crag.country} </Text>
@@ -161,14 +162,14 @@ export function SearchResults({
                     <Box className="climbing-type">
                       <Text>
                         {"Climbing Type: "}
-                        {crag.climbingTypes
-                          .map((type) => type.climbingType)
+                        {crag.climbingType
+                          .map((type) => type.name)
                           .join(", ")}
                       </Text>
                     </Box>
 
                     <Text> Distance: {crag.distance} Kilometres </Text>
-                    <Text> Routes: {crag.routes} </Text>
+                    <Text> Routes: {crag.routeCount} </Text>
                   </Box>
                   <WeatherComponent lat={crag.osy} lon={crag.osx} date={date} />
                 </CardBody>
