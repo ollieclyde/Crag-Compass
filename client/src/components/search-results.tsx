@@ -1,20 +1,15 @@
 import { useState, useEffect } from "react";
 import {
   Button,
-  Card,
-  CardBody,
-  Text,
-  Divider,
-  CardHeader,
-  Box,
   IconButton,
 } from "@chakra-ui/react";
-import { MapContainer, TileLayer, Marker, Popup } from "react-leaflet";
 import { Crag } from "../types/types";
 import { CragFilters } from "./crag-filters";
-import WeatherComponent from "./weather-component";
 import { IoFilter } from "react-icons/io5";
 import { ArrowForwardIcon, ArrowBackIcon } from "@chakra-ui/icons";
+import CragCard from "./crag-card";
+
+import "./search-results.css";
 
 export function SearchResults({
   filteredCrags,
@@ -64,8 +59,6 @@ export function SearchResults({
 
   useEffect(() => {
     const slicedCrags: Crag[] = filteredCrags.slice(0, 10);
-    console.log(filteredCrags, "filteredCrags");
-
     setCurrentPageCrags(slicedCrags);
   }, [filteredCrags, distanceFlag, routeFlag]);
 
@@ -125,80 +118,8 @@ export function SearchResults({
         </div>
         {Array.isArray(currentPageCrags)
           ? currentPageCrags.map((crag: Crag) => (
-              <Card
-                className="crag-card"
-                key={crag.cragID}
-                direction={{ base: "column", sm: "row" }}
-                justify="start"
-                overflow="hidden"
-                variant="elevated"
-                colorScheme="teal"
-                size="sm"
-                height="25vh"
-                transition="transform 0.3s ease, box-shadow 0.3s ease, border-width 0.3s ease"
-                box-shadow="0px 10px 20px rgba(0, 0, 0, 0.5)"
-              >
-                <CardHeader className="card-header" padding={0}>
-                  <Box className="card-header-text">
-                    <Text as="b" fontSize="larger">
-                      {" "}
-                      {crag.name}{" "}
-                    </Text>
-                    <Text> {crag.location} </Text>
-                    <Text> {crag.country} </Text>
-                  </Box>
-                </CardHeader>
-
-                <Divider orientation="vertical" variant="solid" />
-
-                <CardBody className="card-body">
-                  <Box className="card-body-text">
-                    <Text>
-                      {" "}
-                      Rock Type:{" "}
-                      {crag.rockType[0].toUpperCase() +
-                        crag.rockType.slice(1)}{" "}
-                    </Text>
-                    <Box className="climbing-type">
-                      <Text>
-                        {"Climbing Type: "}
-                        {crag.climbingType
-                          .map((type) => type.name)
-                          .join(", ")}
-                      </Text>
-                    </Box>
-
-                    <Text> Distance: {crag.distance} Kilometres </Text>
-                    <Text> Routes: {crag.routeCount} </Text>
-                  </Box>
-                  <WeatherComponent lat={crag.osy} lon={crag.osx} date={date} />
-                </CardBody>
-                <Box className="map-container">
-                  <MapContainer
-                    center={[+crag.osy, +crag.osx]}
-                    zoom={13}
-                    scrollWheelZoom={false}
-                  >
-                    <TileLayer
-                      attribution=""
-                      url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
-                    />
-                    <Marker position={[+crag.osy, +crag.osx]}>
-                      <Popup>
-                        <a
-                          href={`https://www.google.com/maps?q=${crag.osy},${crag.osx}`}
-                          target="_blank"
-                          rel="noopener noreferrer"
-                        >
-                          Open in Google Maps
-                        </a>
-                      </Popup>
-                    </Marker>
-                  </MapContainer>
-                  <Divider />
-                </Box>
-              </Card>
-            ))
+            <CragCard crag={crag} date={date} />
+          ))
           : null}
         <div className="pagination-controls">
           <Button onClick={handlePrevious}>

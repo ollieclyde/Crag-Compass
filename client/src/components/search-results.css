@@ -1,0 +1,22 @@
+.search-results {
+  width: 100%;
+}
+
+.search-filter {
+  display: flex;
+  padding: 1rem;
+  align-items: center;
+  gap: 2rem;
+}
+
+.routes-filter-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 1rem;
+}
+
+.filter-search-results-container {
+  display: flex;
+  align-items: center;
+}

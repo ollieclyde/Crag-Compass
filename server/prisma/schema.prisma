@@ -25,8 +25,9 @@ model Crag {
   routeCount Int
   rockType   String
 
-  routes   Route[]
-  cragInfo CragInfo?
+  routes    Route[]
+  cragInfo  CragInfo?
+  cragStats CragStats?
 
   climbingType ClimbingType[]
 }
@@ -39,12 +40,27 @@ model ClimbingType {
 }
 
 model CragInfo {
-  cragInfoID  Int    @id @default(autoincrement())
-  img         String
-  features    String
-  approach    String
+  cragInfoID Int    @id @default(autoincrement())
+  img        String
+  features   String
+  approach   String
   accessType Int
   accessNote String
+
+  cragID Int  @unique
+  crag   Crag @relation(fields: [cragID], references: [cragID])
+}
+
+model CragStats {
+  cragStatsID      Int    @id @default(autoincrement())
+  mainClimbingType String
+  beginner         Int
+  experienced      Int
+  advanced         Int
+  expert           Int
+  elite            Int
+  range            String
+  avgStars         Float
 
   cragID Int  @unique
   crag   Crag @relation(fields: [cragID], references: [cragID])

@@ -10,7 +10,10 @@ const getCrags = async function (req: Request, res: Response) {
     // return all the crags in the db and all the assosiated climbingTypes
     const allCrags: Crag[] = await prisma.crag.findMany({
       include: {
-        climbingType: true
+        climbingType: true,
+        cragInfo: true,
+        routes: true,
+        cragStats: true,
       }
     });
 

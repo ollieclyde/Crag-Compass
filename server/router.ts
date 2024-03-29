@@ -10,5 +10,6 @@ router.get("/getAll", GetCrags.getAll);
 router.post("/addCrag", AddCrags.addCrag);
 router.post("/addCragInfo", AddCrags.addCragInfo);
 router.post("/addRoute", AddCrags.addRoute);
+router.post("/addCragStats", AddCrags.addCragStats);
 
 export default router;

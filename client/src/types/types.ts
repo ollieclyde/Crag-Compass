@@ -17,20 +17,53 @@ export type Coords = {
   lat: string;
 };
 
-export type Crag = {
-  country: string;
-  name: string;
-  distance: number;
-  faces: string;
+
+export interface Crag {
   cragID: number;
+  name: string;
+  country: string;
+  faces: string;
   location: string;
   osx: string;
   osy: string;
   rockType: string;
-  routeCount: string;
+  routeCount: number;
   ukcURL: string;
   climbingType: ClimbingType[];
+  distance: number;
+  cragInfo?: CragInfo;
+  routes?: Route[];
+  cragStats?: CragStats;
 };
+
+export interface CragInfo {
+  cragID: number;
+  img: string;
+  features: string;
+  approach: string;
+  accessType: number;
+  accessNote: string;
+}
+export interface CragStats {
+  cragID: number;
+  beginner: number;
+  advanced: number;
+  experienced: number;
+  expert: number;
+  elite: number;
+  mainClimbingType: string;
+  avgStars: GLfloat;
+}
+
+export interface Route {
+  cragID: number;
+  name: string;
+  grade: string;
+  climbingType: number;
+  stars: number;
+  logs: number;
+}
+
 
 export type WeatherDataDay = {
   precipitation_hours: number[];

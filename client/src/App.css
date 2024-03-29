@@ -43,24 +43,11 @@
 }
 
 .logo-container img {
-  /* Targeting the image inside the container */
   height: 100px;
-  /* Set a specific height */
   width: 100px;
-  /* Set a specific width equal to the height */
   border-radius: 50%;
-  /* This makes the image round */
   object-fit: cover;
-  /* Optional: ensures the image covers the area without distortion */
 }
-
-/* .form-content{
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
-  text-align: center;
-} */
 
 .search-container {
   padding-right: 100px;
@@ -72,33 +59,8 @@
   height: 90%;
 }
 
-.search-results {
-  width: 100%;
-}
-
-.crag-card {
-  justify-content: center;
-  align-items: center;
-  max-width: 100%;
-  margin: 50px;
-  margin-left: 100px;
-  margin-right: 100px;
-  overflow: hidden;
-  transition:
-    transform 0.3s ease,
-    box-shadow 0.3s ease,
-    border-width 0.3s ease;
-  box-shadow: 0px 10px 20px rgba(0, 0, 0, 0.5);
-  border: 10px solid #000;
-}
-
 .search-icon:hover {
   transform: translateY(-5px);
-}
-
-.crag-card:hover {
-  transform: translateY(-2px);
-  box-shadow: 0px 10px 20px rgba(0, 0, 0, 0.7);
 }
 
 .grade-slider-value {
@@ -114,89 +76,3 @@
   justify-content: space-around;
 }
 
-.card-header {
-  width: 30%;
-  height: 100%;
-  display: flex;
-  justify-content: center;
-  text-align: center;
-  padding: 0px;
-}
-
-.card-header-text {
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
-  padding: 0px;
-}
-
-.card-body {
-  display: flex;
-  flex-direction: row;
-  justify-content: space-evenly;
-  align-items: center;
-  height: 100%;
-  width: 45%;
-}
-
-.card-body-text {
-  display: flex;
-  flex-direction: column;
-  text-align: left;
-  gap: 1rem;
-  padding-left: 1rem;
-}
-
-.map-container {
-  height: 100%;
-  width: 25%;
-  overflow: hidden;
-}
-
-.climbing-type {
-  display: flex;
-}
-
-.search-filter {
-  display: flex;
-  padding: 1rem;
-  align-items: center;
-  gap: 2rem;
-}
-
-.routes-filter-container {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  gap: 1rem;
-}
-
-.filter-search-results-container {
-  display: flex;
-  align-items: center;
-}
-
-.weather-container {
-  padding-right: 1rem;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  flex-direction: column;
-  gap: 10px;
-  height: 100%;
-}
-
-.sunrise-sunset-container {
-  display: flex;
-  justify-content: space-evenly;
-  align-items: center;
-  height: 100%;
-  gap: 1rem;
-}
-
-.weather-icon-container {
-  display: flex;
-  justify-content: center;
-  padding-top: 4px;
-}

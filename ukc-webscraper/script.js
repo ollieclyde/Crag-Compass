@@ -6,7 +6,7 @@ const baseURL = "https://www.ukclimbing.com/";
 
 class SearchRes {
   constructor() {
-    this.cragName = null;
+    this.name = null;
     this.location = null;
     this.country = null;
     this.osx = null;
@@ -44,7 +44,7 @@ const search = async (browser, pageUrl) => {
 const parseTableRow = async (item, page) => {
   const newSearchRes = new SearchRes();
   const title = await item.$("a");
-  newSearchRes.cragName = await page.evaluate((el) => el.innerText, title);
+  newSearchRes.name = await page.evaluate((el) => el.innerText, title);
   newSearchRes.ukcURL = await page.evaluate(
     (el) => el.getAttribute("href"),
     title,

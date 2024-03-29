@@ -9,6 +9,8 @@ import { Text } from "@chakra-ui/react";
 import { WeatherDataDay } from "../types/types";
 import APIService from "../Api-client-service";
 
+import "./weather-component.css";
+
 const WeatherComponent = ({
   lat,
   lon,
@@ -59,7 +61,7 @@ const WeatherComponent = ({
         )}
       </div>
       <p>
-        Avg Temp:{" "}
+        {" "}
         {(
           (weatherData?.temperature_2m_max[daysFromNow] +
             weatherData?.temperature_2m_min[daysFromNow]) /

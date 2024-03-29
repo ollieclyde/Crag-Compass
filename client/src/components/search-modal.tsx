@@ -22,6 +22,7 @@ import {
 } from "@chakra-ui/react";
 import { Search2Icon } from "@chakra-ui/icons";
 import { SearchModalProps } from "../types/types";
+import GooglePlacesAutocomplete from "react-google-places-autocomplete";
 import "../App.css";
 
 const SearchModal: React.FC<SearchModalProps> = ({
@@ -77,13 +78,28 @@ const SearchModal: React.FC<SearchModalProps> = ({
           >
             <FormControl className="form-content" isRequired>
               <FormLabel>Location</FormLabel>
-              <Input
+              <GooglePlacesAutocomplete
+                apiOptions={{ language: 'en', region: 'gb' }}
+                autocompletionRequest={{
+                  componentRestrictions: {
+                    country: ['gb'],
+                  }
+                }}
+                selectProps={{
+                  onChange: (address) => {
+                    if (address) {
+                      setLocation(address.label)
+                    }
+                  }
+                }}
+              />
+              {/* <Input
                 isRequired={true}
                 type="text"
                 value={location}
                 onChange={(e) => setLocation(e.target.value)}
                 min={currentDateTime}
-              />
+              /> */}
             </FormControl>
 
             <FormControl className="form-content">

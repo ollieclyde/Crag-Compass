@@ -16,7 +16,7 @@ function App() {
 
   const [crags, setCrags] = useState<Crag[]>([]);
   const [filteredCrags, setFilteredCrags] = useState<Crag[]>([]);
-  
+
   const [location, setLocation] = useState<string>("London");
   const [currentLocation, setCurrentLocation] = useState<string>("London");
   const [currentCoords, setCurrentCords] = useState<Coords>({
@@ -52,6 +52,7 @@ function App() {
           distRange,
         );
         if (apiResults) {
+          console.log(apiResults);
           setCrags(apiResults);
           const filtered = apiResults.filter((crag: Crag) => basicFilter(crag));
           setFilteredCrags(filtered);
@@ -133,7 +134,7 @@ function App() {
     // check that the crag has the correct number of routes
     const minRoutes = +numOfRoutes[0];
     const maxRoutes = +numOfRoutes[1] !== 500 ? +numOfRoutes[1] : 1000000;
-    if (crag.routeCount === "?") {
+    if (!crag.routeCount) {
       return false;
     }
     if (+crag.routeCount < minRoutes || +crag.routeCount > maxRoutes) {

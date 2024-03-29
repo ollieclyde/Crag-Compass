@@ -6,7 +6,7 @@ class Route {
     this.cragID = null;
     this.name = 'Unknown';
     this.grade = 'Unknown';
-    this.climbingType = 1;
+    this.climbingTypeID = 1;
     this.stars = 0;
     this.logs = 0;
   }
@@ -96,7 +96,7 @@ const getRoutes = async (page, pageURL) => {
             route.stars = iElement ? await page.evaluate(el => Number(el.getAttribute("title").split(' ')[0]), iElement) : 0;
           } else if (i === 5) {
             const iElement = await cols[i].$("i");
-            route.climbingType = iElement ? await page.evaluate(el => {
+            route.climbingTypeID = iElement ? await page.evaluate(el => {
               const title = el.getAttribute("title");
               if (!title) return 1;
               if (title === "Bouldering" || title === "Boulder Circuit") return 2;

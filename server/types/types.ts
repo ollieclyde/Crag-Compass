@@ -1,5 +1,5 @@
 export interface Crag {
-  cragName: string;
+  name: string;
   country: string;
   faces: string;
   location: string;
@@ -9,6 +9,8 @@ export interface Crag {
   routeCount: number;
   ukcURL: string;
   climbingTypes: number[];
+  cragInfo?: CragInfo;
+  routes?: Route[];
 };
 
 export interface CragInfo {
@@ -24,7 +26,7 @@ export interface Route {
   cragID: number;
   name: string;
   grade: string;
-  climbingType: number;
+  climbingTypeID: number;
   stars: number;
   logs: number;
 }
