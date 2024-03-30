@@ -14,29 +14,16 @@ import "./weather-component.css";
 const WeatherComponent = ({
   lat,
   lon,
-  date,
+  daysFromNow,
 }: {
   lat: string;
   lon: string;
-  date: string;
+  daysFromNow: number;
 }) => {
   const [weatherData, setWeatherData] = useState<WeatherDataDay>();
-  const [daysFromNow, setDaysFromNow] = useState<number>(0);
-
-  const getDaysFromNow = (dateString: string): number => {
-    const oneDay = 24 * 60 * 60 * 1000;
-    const today = new Date();
-    today.setHours(0, 0, 0, 0);
-
-    const providedDate = new Date(dateString);
-    providedDate.setHours(0, 0, 0, 0);
-
-    const diffDays = Math.round(Math.abs((+providedDate - +today) / oneDay));
-    return diffDays;
-  };
 
   useEffect(() => {
-    setDaysFromNow(getDaysFromNow(date));
+    console.log(daysFromNow)
 
     const url = `https://api.open-meteo.com/v1/forecast?latitude=${lat}&longitude=${lon}&hourly=temperature_2m,precipitation_probability,rain&daily=temperature_2m_max,temperature_2m_min,sunrise,sunset,precipitation_sum,rain_sum,precipitation_hours,precipitation_probability_max&timezone=GMT`;
 

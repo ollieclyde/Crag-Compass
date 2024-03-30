@@ -3,28 +3,24 @@ import {
   CardBody,
   Text,
   Divider,
-  CardHeader,
   Image,
   Box,
 } from "@chakra-ui/react";
 import { MapContainer, TileLayer, Marker, Popup } from "react-leaflet";
 import { Crag } from "../types/types";
 import WeatherComponent from "./weather-component";
+import { GiMountainClimbing, GiStoneBlock } from "react-icons/gi";
+import { RiPinDistanceFill } from "react-icons/ri";
 import { PieChart, Pie, Sector, Cell, ResponsiveContainer } from 'recharts';
-
-
 import { MdOutlineImageNotSupported } from "react-icons/md";
-
-
 import './crag-card.css';
-import { useEffect, useState } from "react";
 
 interface CragCardProps {
   crag: Crag;
-  date: string;
+  daysFromNow: number;
 }
 
-const CragCard: React.FC<CragCardProps> = ({ crag, date }) => {
+const CragCard: React.FC<CragCardProps> = ({ crag, daysFromNow }) => {
 
   const cragStats = crag.cragStats;
   const COLORS = ['#008000', '#FFFF00', '#FF0000', '#000000', '#FFFFFF'];
@@ -48,7 +44,7 @@ const CragCard: React.FC<CragCardProps> = ({ crag, date }) => {
         variant="elevated"
         colorScheme="teal"
         size="sm"
-        height="25vh"
+        height="40svh"
         transition="transform 0.3s ease, box-shadow 0.3s ease, border-width 0.3s ease"
         style={{ boxShadow: '0px 10px 20px rgba(0, 0, 0, 0.5)' }}
       >
@@ -80,43 +76,45 @@ const CragCard: React.FC<CragCardProps> = ({ crag, date }) => {
             </Text>
           </Box>
           <Box className="card-body-text">
+            <GiStoneBlock />
             <Text fontSize='small' >
-              Rock Type:
               {' ' + crag.rockType[0].toUpperCase() + crag.rockType.slice(1)}
             </Text>
+            <GiMountainClimbing />
             <Text fontSize='small'>
-              Climbing Type:
               {' ' + crag.climbingType.map((type) => type.name).join(', ')}
             </Text>
-            <Text fontSize='small'>Distance: {' ' + crag.distance}km</Text>
-            <Text fontSize='small'>Routes: {crag.routeCount}</Text>
+            <RiPinDistanceFill />
+            <Text fontSize='small'>{' ' + crag.distance}km</Text>
           </Box>
           <Box className="features-container">
             <Text fontSize='small' noOfLines={[1, 2, 3]}>
               {crag.cragInfo?.features}
             </Text>
           </Box>
-          <ResponsiveContainer width="100%" height="100%">
-            <PieChart width={400} height={400}>
-              <Pie
-                data={data}
-                cx="50%"
-                cy="50%"
-                labelLine={false}
-                // label={renderCustomizedLabel}
-                outerRadius={80}
-                fill="#8884d8"
-                dataKey="value"
-              >
-                {data.map((entry, index) => (
-                  <Cell key={`cell-${index}`} fill={COLORS[index]} />
-                ))}
-              </Pie>
-            </PieChart>
-          </ResponsiveContainer>
+          <Box className="info-graphics-container">
+            <ResponsiveContainer width="100%" height="100%">
+              <PieChart width={400} height={400}>
+                <Pie
+                  data={data}
+                  cx="50%"
+                  cy="50%"
+                  labelLine={false}
+                  // label={renderCustomizedLabel}
+                  outerRadius={80}
+                  fill="#8884d8"
+                  dataKey="value"
+                >
+                  {data.map((entry, index) => (
+                    <Cell key={`cell-${index}`} fill={COLORS[index]} />
+                  ))}
+                </Pie>
+              </PieChart>
+            </ResponsiveContainer>
+            <WeatherComponent lat={crag.osy} lon={crag.osx} daysFromNow={daysFromNow} />
+          </Box>
         </CardBody>
 
-        <WeatherComponent lat={crag.osy} lon={crag.osx} date={date} />
 
         <Box className="map-container">
           <MapContainer

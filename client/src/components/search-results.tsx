@@ -15,12 +15,12 @@ export function SearchResults({
   filteredCrags,
   cragCount,
   setFilteredCrags,
-  date,
+  daysFromNow,
 }: {
   filteredCrags: Crag[];
   cragCount: number;
   setFilteredCrags: Function;
-  date: string;
+  daysFromNow: number;
 }) {
   const [filterFlag, setFilterFlag] = useState<boolean>(false);
   const [routeFlag, setRouteFlag] = useState<boolean>(false);
@@ -118,7 +118,7 @@ export function SearchResults({
         </div>
         {Array.isArray(currentPageCrags)
           ? currentPageCrags.map((crag: Crag) => (
-            <CragCard crag={crag} date={date} />
+            <CragCard crag={crag} daysFromNow={daysFromNow} />
           ))
           : null}
         <div className="pagination-controls">

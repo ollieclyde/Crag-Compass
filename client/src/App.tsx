@@ -3,7 +3,7 @@ import { useDisclosure } from "@chakra-ui/react";
 import moment from "moment";
 import { Libraries, useLoadScript } from "@react-google-maps/api";
 import APIService from "./Api-client-service";
-import { Crag, Coords } from "./types/types";
+import { Crag, SearchState } from "./types/types";
 import { SearchResults } from "./components/search-results";
 import "./App.css";
 import { GeocodeResult } from "use-places-autocomplete";
@@ -17,19 +17,22 @@ function App() {
   const [crags, setCrags] = useState<Crag[]>([]);
   const [filteredCrags, setFilteredCrags] = useState<Crag[]>([]);
 
-  const [location, setLocation] = useState<string>("London");
-  const [currentLocation, setCurrentLocation] = useState<string>("London");
-  const [currentCoords, setCurrentCords] = useState<Coords>({
-    lat: "51.509865",
-    lng: "-0.118092",
-  });
   const currentDateTime = moment().format("YYYY-MM-DDTHH:mm");
-  const [departureDate, setDepartureDate] = useState<string>(currentDateTime);
-  const [climbingType, setClimbingType] = useState<string[]>(["all"]);
-  const [rockType, setRockType] = useState<string[]>(["all"]);
-  const [numOfRoutes, setNumOfRoutes] = useState<number[]>([0, 250]);
-  const [distRange, setDistRange] = useState<number[]>([0, 50]);
-  const [searchedDistRange, setSearchedDistRange] = useState<number[]>([0, 50]);
+  const [searchState, setSearchState] = useState<SearchState>(
+    {
+      location: 'London',
+      coords: {
+        lat: "51.509865",
+        lng: "-0.118092",
+      },
+      departureDate: currentDateTime,
+      daysFromNow: 0,
+      climbingType: ["all"],
+      rockType: ["all"],
+      numOfRoutes: [0, 250],
+      distRange: [0, 50],
+    }
+  )
   const { isOpen, onOpen, onClose } = useDisclosure();
 
   const { isLoaded, loadError } = useLoadScript({
@@ -39,20 +42,20 @@ function App() {
 
   useEffect(() => {
     if (isLoaded && !loadError) {
-      fetchCrags(currentCoords.lng, currentCoords.lat);
+      fetchCrags(searchState.coords.lng, searchState.coords.lat, searchState.distRange);
     }
   }, [isLoaded, loadError]);
 
-  const fetchCrags = async (lng: string, lat: string): Promise<void> => {
+  const fetchCrags = async (lng: string, lat: string, distRange: number[]): Promise<void> => {
     try {
-      if (currentCoords) {
+      if (lng && lat) {
         const apiResults: Crag[] | undefined = await APIService.getAllCrags(
           lng,
           lat,
           distRange,
         );
         if (apiResults) {
-          console.log(apiResults);
+          console.log(apiResults)
           setCrags(apiResults);
           const filtered = apiResults.filter((crag: Crag) => basicFilter(crag));
           setFilteredCrags(filtered);
@@ -63,75 +66,14 @@ function App() {
     }
   };
 
-  // Use of Google Maps Geocode
-  const geocodeLocation = async (
-    address: string,
-  ): Promise<Coords | undefined> => {
-    const geocoder = new google.maps.Geocoder();
-    try {
-      const results: GeocodeResult[] | null = await new Promise(
-        (resolve, reject) => {
-          geocoder.geocode({ address: address }, (results, status) => {
-            if (status === "OK") {
-              resolve(results);
-            } else {
-              reject(status);
-            }
-          });
-        },
-      );
-      if (results && results[0]) {
-        return {
-          lat: results[0].geometry.location.lat().toString(),
-          lng: results[0].geometry.location.lng().toString(),
-        };
-      } else {
-        return undefined;
-      }
-    } catch (error) {
-      console.error(
-        `Geocode was not successful for the following reason: ${error}`,
-      );
-    }
-  };
-
-  const handleCheckboxChange = (
-    setter: Function,
-    values: (string | number)[],
-  ) => {
-    const flag = values.includes("all");
-    if (values[0] === "all" && values.length > 1) {
-      setter(values.filter((value) => value !== "all"));
-    } else if (!flag) {
-      setter(values);
-    } else {
-      setter(["all"]);
-    }
-  };
-
-  const searchHandler = async () => {
-    // Only call database if distance or location change otherwise just filter
-    if (
-      location !== currentLocation ||
-      distRange[0] !== searchedDistRange[0] ||
-      distRange[1] !== searchedDistRange[1]
-    ) {
-      setCurrentLocation(location);
-      setSearchedDistRange(distRange);
-      const coords = await geocodeLocation(location);
-      if (coords) {
-        fetchCrags(coords.lng, coords.lat);
-        setCurrentCords(coords);
-      }
-    } else {
-      const filtered = crags.filter((crag) => basicFilter(crag));
-      setFilteredCrags(filtered);
-    }
-    onClose();
-  };
+  useEffect(() => {
+    const filtered = crags.filter((crag) => basicFilter(crag));
+    setFilteredCrags(filtered);
+  }, [searchState])
 
   const basicFilter = (crag: Crag) => {
-    // check that the crag has the correct number of routes
+    const { numOfRoutes, climbingType, rockType } = searchState;
+
     const minRoutes = +numOfRoutes[0];
     const maxRoutes = +numOfRoutes[1] !== 500 ? +numOfRoutes[1] : 1000000;
     if (!crag.routeCount) {
@@ -177,24 +119,14 @@ function App() {
             </div>
           </div>
           <SearchModal
-            location={location}
-            setLocation={setLocation}
-            departureDate={departureDate}
-            setDepartureDate={setDepartureDate}
-            climbingType={climbingType}
-            setClimbingType={setClimbingType}
-            rockType={rockType}
-            setRockType={setRockType}
-            numOfRoutes={numOfRoutes}
-            setNumOfRoutes={setNumOfRoutes}
-            distRange={distRange}
-            setDistRange={setDistRange}
-            searchHandler={searchHandler}
+            searchState={searchState}
+            setSearchState={setSearchState}
+            fetchCrags={fetchCrags}
+            basicFilter={basicFilter}
+            setFilteredCrags={setFilteredCrags}
             isOpen={isOpen}
             onOpen={onOpen}
             onClose={onClose}
-            handleCheckboxChange={handleCheckboxChange}
-            currentDateTime={currentDateTime}
           />
         </nav>
         <section className="main-content">
@@ -202,7 +134,7 @@ function App() {
             filteredCrags={filteredCrags}
             cragCount={filteredCrags.length}
             setFilteredCrags={setFilteredCrags}
-            date={departureDate}
+            daysFromNow={searchState.daysFromNow}
           />
         </section>
       </div>

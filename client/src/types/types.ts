@@ -77,22 +77,24 @@ export type WeatherDataDay = {
   time: string[];
 };
 
-export type SearchModalProps = {
+export interface SearchState {
   location: string;
-  setLocation: Function;
+  coords: Coords;
   departureDate: string;
-  setDepartureDate: Function;
+  daysFromNow: number;
   climbingType: string[];
-  setClimbingType: Function;
   rockType: string[];
-  setRockType: Function;
   numOfRoutes: number[];
-  setNumOfRoutes: Function;
   distRange: number[];
-  setDistRange: Function;
-  handleCheckboxChange: Function;
-  currentDateTime: string;
-  searchHandler: () => Promise<void>;
+}
+
+
+export type SearchModalProps = {
+  setSearchState: Function;
+  searchState: SearchState;
+  basicFilter: Function;
+  setFilteredCrags: Function;
+  fetchCrags: (lng: string, lat: string, distRange: number[]) => Promise<void>;
   onOpen: () => void;
   isOpen: boolean;
   onClose: () => void;

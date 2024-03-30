@@ -39,6 +39,7 @@
   flex-direction: column;
   height: 100%;
   width: 45%;
+  gap: 3px;
 }
 
 .card-body-text {
@@ -57,4 +58,12 @@
   height: 100%;
   width: 25%;
   overflow: hidden;
+}
+
+.info-graphics-container{
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  width: 100%;
+  height: 100%;
 }
