@@ -31,3 +31,37 @@ export const geocodeLocation = async (
     );
   }
 };
+
+
+export const distanceMatrix = async (originCoords: Coords, destinationCoords: Coords, departureDate: string) => {
+  const origin = new google.maps.LatLng(+originCoords.lat, +originCoords.lng);
+  const destination = new google.maps.LatLng(+destinationCoords.lat, +destinationCoords.lng);
+  const service = new google.maps.DistanceMatrixService()
+  const request: any = {
+    origins: [origin],
+    destinations: [destination],
+    travelMode: google.maps.TravelMode.DRIVING,
+    drivingOptions: {
+      departureTime: departureDate
+    }
+  }
+  try {
+    const results: any = await new Promise((resolve, reject) => {
+      service.getDistanceMatrix(request, (results, status) => {
+        if (status === 'OK') {
+          resolve(results);
+        } else {
+          reject(status);
+        }
+      });
+    });
+    const timeInSecs = results?.rows[0]?.elements[0].duration_in_traffic?.value
+    if (timeInSecs) {
+      return timeInSecs;
+    } else {
+      return 'unknown'
+    }
+  } catch (err) {
+    console.error(`Google distance matrix error: ${err} `)
+  }
+}

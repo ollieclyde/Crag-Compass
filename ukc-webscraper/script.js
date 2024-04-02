@@ -127,7 +127,7 @@ const parseTableRow = async (item, page) => {
 
   try {
     const pageURL =
-      "https://www.ukclimbing.com/logbook/crags/?location=London&distance=50";
+      "https://www.ukclimbing.com/logbook/crags/?location=London&distance=100";
     const searchResults = await search(browser, pageURL);
 
     if (searchResults && searchResults.length > 0) {

@@ -1,10 +1,5 @@
 const axios = require("axios").default;
 
-
-
-
-
-
 (async () => {
   try {
     const crags = await axios.get("http://localhost:3000/getAll");

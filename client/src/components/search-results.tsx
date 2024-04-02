@@ -8,7 +8,6 @@ import { CragFilters } from "./crag-filters";
 import { IoFilter } from "react-icons/io5";
 import { ArrowForwardIcon, ArrowBackIcon } from "@chakra-ui/icons";
 import CragCard from "./crag-card";
-
 import "./search-results.css";
 
 export function SearchResults({
@@ -118,7 +117,7 @@ export function SearchResults({
         </div>
         {Array.isArray(currentPageCrags)
           ? currentPageCrags.map((crag: Crag) => (
-            <CragCard crag={crag} daysFromNow={daysFromNow} />
+              <CragCard crag={crag} daysFromNow={daysFromNow} />
           ))
           : null}
         <div className="pagination-controls">

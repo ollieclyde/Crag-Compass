@@ -21,3 +21,12 @@
   justify-content: center;
   padding-top: 4px;
 }
+
+.temperature-wind-container{
+  display: flex;
+  flex-direction: row;
+  justify-content: space-evenly;
+  align-items: center;
+  height: 100%;
+  gap: 1rem;
+}

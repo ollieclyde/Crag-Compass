@@ -1,10 +1,7 @@
 .crag-card {
   justify-content: center;
   align-items: center;
-  max-width: 100%;
   margin: 50px;
-  margin-left: 100px;
-  margin-right: 100px;
   overflow: hidden;
   transition:
     transform 0.3s ease,
@@ -60,10 +57,22 @@
   overflow: hidden;
 }
 
-.info-graphics-container{
+.info-graphics-container {
   display: flex;
   flex-direction: row;
-  justify-content: space-between;
+  justify-content: space-evenly;
   width: 100%;
   height: 100%;
+}
+
+.pie-chart {
+  flex: 1;
+}
+
+.avg-rating-component {
+  padding-left: 7px;
+}
+
+.weather-component {
+  flex: 1;
 }

@@ -135,19 +135,18 @@ const addCragInfo = async (crag, browser) => {
       const page = await browser.newPage()
       const pageURL = `https://www.ukclimbing.com/${crag.ukcURL}`;
 
-      // const cragInfo = await evaluateCrag(page, pageURL)
-      // cragInfo.cragID = crag.cragID
-      // await axios.post("http://localhost:3000/addCragInfo", { cragInfoData: cragInfo });
+      const cragInfo = await evaluateCrag(page, pageURL)
+      cragInfo.cragID = crag.cragID
+      await axios.post("http://localhost:3000/addCragInfo", { cragInfoData: cragInfo });
 
-      const routes = await getRoutes(page, pageURL)
+      // const routes = await getRoutes(page, pageURL)
 
-      console.log(routes)
-      for (const route of routes) {
-        route.cragID = crag.cragID
-        if (route.climbingType && route.grade !== 'Unknown' && route.name !== 'Unknown') {
-          await axios.post("http://localhost:3000/addRoute", { routeData: route });
-        }
-      }
+      // for (const route of routes) {
+      //   route.cragID = crag.cragID
+      //   if (route.climbingType && route.grade !== 'Unknown' && route.name !== 'Unknown') {
+      //     await axios.post("http://localhost:3000/addRoute", { routeData: route });
+      //   }
+      // }
       await browser.close();
     }
 
