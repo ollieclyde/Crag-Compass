@@ -8,6 +8,7 @@ import { SearchResults } from "./components/search-results";
 import "./App.css";
 import { GeocodeResult } from "use-places-autocomplete";
 import SearchModal from "./components/search-modal";
+import { PieChartKeyModal } from "./components/pie-chart-key-modal";
 
 const GoogleApiKey: string = import.meta.env.VITE_GOOGLE_API;
 const googleMapLibrary: Libraries = ["places"];
@@ -34,7 +35,6 @@ function App() {
     }
   )
   const { isOpen, onOpen, onClose } = useDisclosure();
-
   const { isLoaded, loadError } = useLoadScript({
     googleMapsApiKey: GoogleApiKey,
     libraries: googleMapLibrary,
@@ -82,13 +82,15 @@ function App() {
     if (+crag.routeCount < minRoutes || +crag.routeCount > maxRoutes) {
       return false;
     }
-    // check that the crag has the correct rocktype
     if (rockType[0] !== "all") {
       if (!rockType.includes(crag.rockType)) {
         return false;
       }
     }
-    //check that the crag has the correct climbingtype
+    // if the crag does not have a single route or number greater than 0 in the cragStats.begginer to elite properties
+    if (!crag.cragStats || crag?.cragStats?.beginner === 0 && crag?.cragStats?.advanced === 0 && crag?.cragStats?.experienced === 0&& crag.cragStats.expert === 0 && crag.cragStats.elite === 0) {
+      return false;
+    }
     if (!climbingType.includes("all")) {
       let flag = false;
       for (let type of climbingType) {

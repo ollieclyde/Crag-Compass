@@ -57,13 +57,13 @@ export function SearchResults({
   };
 
   useEffect(() => {
-    const slicedCrags: Crag[] = filteredCrags.slice(0, 10);
+    const slicedCrags: Crag[] = filteredCrags.slice(0, 12);
     setCurrentPageCrags(slicedCrags);
   }, [filteredCrags, distanceFlag, routeFlag]);
 
   // state to keep track of which page the user is on.
   const [currentPage, setCurrentPage] = useState(0);
-  const itemsPerPage = 10;
+  const itemsPerPage = 12;
 
   // function to determine which page the user is on
   const pageCount = Math.ceil(filteredCrags.length / itemsPerPage);
@@ -115,11 +115,13 @@ export function SearchResults({
             <p>Search results: {cragCount}</p>
           </div>
         </div>
-        {Array.isArray(currentPageCrags)
-          ? currentPageCrags.map((crag: Crag) => (
-              <CragCard crag={crag} daysFromNow={daysFromNow} />
-          ))
-          : null}
+        <div className="crag-card-container">
+          {Array.isArray(currentPageCrags)
+            ? currentPageCrags.map((crag: Crag) => (
+              <CragCard crag={crag} daysFromNow={daysFromNow}/>
+            ))
+            : null}
+        </div>
         <div className="pagination-controls">
           <Button onClick={handlePrevious}>
             <ArrowBackIcon />

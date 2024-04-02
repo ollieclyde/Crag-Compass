@@ -25,11 +25,11 @@ const AccessWarningPopover: React.FC<AccessWarningPopoverProps> = ({ accessType,
   };
 
   return (
-    <Popover placement="top" closeOnBlur={false} trigger='hover'>
+    <Popover placement="bottom" closeOnBlur={false} trigger='hover'>
       <PopoverTrigger>
         <IconButton aria-label="Warning label" colorScheme={warningColor[accessType]} icon={<IoWarning />} />
       </PopoverTrigger>
-      <PopoverContent color="white" bg="blue.800" borderColor="blue.800" width={'50vw'}>
+      <PopoverContent color="white" bg="blue.800" borderColor="blue.800" width={"30vw"} height={"auto"}>
         <PopoverHeader pt={4} fontWeight="bold" border="0">
           Access Note
         </PopoverHeader>

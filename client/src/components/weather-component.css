@@ -1,10 +1,8 @@
 .weather-container {
-  padding-right: 1rem;
   display: flex;
   justify-content: center;
   align-items: center;
   flex-direction: column;
-  gap: 10px;
   height: 100%;
 }
 
@@ -19,7 +17,6 @@
 .weather-icon-container {
   display: flex;
   justify-content: center;
-  padding-top: 4px;
 }
 
 .temperature-wind-container{

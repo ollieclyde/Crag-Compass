@@ -1,0 +1,45 @@
+.card-body-text {
+  gap: 10px;
+}
+
+.card-header-text{
+  margin-top: 15px;
+}
+
+.features-approach-container{
+  display: flex;
+  flex-direction: column;
+  padding-top: 10px;
+  display: flex;
+  gap: 20px;
+  padding-bottom: 10px;
+}
+
+.pie-chart.css-0{
+  width: 20vw;
+  height: 20vh;
+}
+
+.info-graphics-container-modal {
+  display: flex;
+  flex-direction: row;
+  gap: 40px;
+  width: 100%;
+  height: 100%;
+}
+
+.pie-chart-component-modal{
+  width: 20vw;
+}
+
+.access-title-container{
+  display: flex;
+  gap: 15px;
+  padding-bottom: 5px;
+}
+
+.access-title{
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}

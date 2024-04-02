@@ -13,10 +13,9 @@ interface CustomRatingProps {
 
 // Define the component with props using TypeScript
 const RatingComponent: React.FC<CustomRatingProps> = ({ avgRating }) => {
-  const normalisedRating = avgRating ? (avgRating / 3) : 0;
   return (
     <ThemeProvider theme={theme}>
-      <Rating name="customized-rating" size={'large'} defaultValue={normalisedRating} precision={0.1} max={1} readOnly />
+      <Rating name="customized-rating" size={'large'} defaultValue={avgRating} precision={0.1} max={3} readOnly />
     </ThemeProvider>
   );
 };
