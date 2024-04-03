@@ -93,7 +93,7 @@ const parseTableRow = async (item, page) => {
           if (title === "Bouldering") return 2;
           if (title === "Trad") return 3;
           if (title === "Sport") return 4;
-          if(title === "Top Rope") return 5;
+          if (title === "Top Rope") return 5;
         }, climbingTypes[j]);
 
         if (item) {

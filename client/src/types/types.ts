@@ -17,7 +17,6 @@ export type Coords = {
   lat: string;
 };
 
-
 export interface Crag {
   cragID: number;
   name: string;
@@ -34,7 +33,7 @@ export interface Crag {
   cragInfo?: CragInfo;
   routes?: Route[];
   cragStats?: CragStats;
-};
+}
 
 export interface CragInfo {
   cragID: number;
@@ -64,7 +63,6 @@ export interface Route {
   logs: number;
 }
 
-
 export type WeatherDataDay = {
   precipitation_hours: number[];
   precipitation_probability_max: number[];
@@ -91,14 +89,3 @@ export interface SearchState {
   distRange: number[];
 }
 
-
-export type SearchModalProps = {
-  setSearchState: Function;
-  searchState: SearchState;
-  basicFilter: Function;
-  setFilteredCrags: Function;
-  fetchCrags: (lng: string, lat: string, distRange: number[]) => Promise<void>;
-  onOpen: () => void;
-  isOpen: boolean;
-  onClose: () => void;
-};

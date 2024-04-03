@@ -3,7 +3,6 @@ import prisma from "../models/db";
 
 import { Crag, CragInfo, Route } from "../types/types";
 
-
 const addCrag = async function (req: Request, res: Response) {
   try {
     const { crag }: { crag: Crag } = req.body;
@@ -49,7 +48,6 @@ const addCrag = async function (req: Request, res: Response) {
   }
 };
 
-
 const addCragInfo = async (req: Request, res: Response) => {
   try {
     const { cragInfoData }: { cragInfoData: CragInfo } = req.body;
@@ -80,7 +78,6 @@ const addCragInfo = async (req: Request, res: Response) => {
       });
 
       res.status(200).json({ message: "Crag info added successfully" });
-
     } else {
       res.status(204).json({ message: "Crag info already exists" });
     }
@@ -88,7 +85,6 @@ const addCragInfo = async (req: Request, res: Response) => {
     console.error(err, "error");
     res.status(500).json({ error: { code: 500, msg: "An error occurred." } });
   }
-
 };
 
 const addRoute = async (req: Request, res: Response) => {
@@ -104,7 +100,7 @@ const addRoute = async (req: Request, res: Response) => {
         climbingTypeID: routeData.climbingTypeID,
       },
     });
-    console.log(routeData, "routeData")
+    console.log(routeData, "routeData");
     if (!existingRoute) {
       await prisma.route.create({
         data: {
@@ -123,7 +119,7 @@ const addRoute = async (req: Request, res: Response) => {
             },
           },
         },
-      })
+      });
       res.status(200).json({ message: "route succesffully added" });
     } else {
       res.status(204).json({ message: "Crag info already exists" });
@@ -150,7 +146,6 @@ interface TypeCount {
   sport: number;
 }
 
-
 const addCragStats = async (req: Request, res: Response) => {
   const { cragID }: { cragID: number } = req.body;
 
@@ -167,8 +162,8 @@ const addCragStats = async (req: Request, res: Response) => {
   const routes = await prisma.route.findMany({
     where: {
       cragID: cragID,
-    }
-  })
+    },
+  });
 
   if (routes.length === 0) {
     res.status(204).json({ message: "No routes found for this crag" });
@@ -178,26 +173,127 @@ const addCragStats = async (req: Request, res: Response) => {
   // Implement the climbingTypes with detailed structure
   const gradeSystems: GradeSystems = {
     boulderingFont: {
-      grades: ['f3', 'f3+', 'f4', 'f4+', 'f5', 'f5+', 'f6a', 'f6a+', 'f6b', 'f6b+', 'f6c', 'f6c+', 'f7a', 'f7a+', 'f7b', 'f7b+', 'f7c', 'f7c+', 'f8a', 'f8a+', 'f8b', 'f8b+', 'f8c', 'f8c+', 'f9a'],
+      grades: [
+        "f3",
+        "f3+",
+        "f4",
+        "f4+",
+        "f5",
+        "f5+",
+        "f6a",
+        "f6a+",
+        "f6b",
+        "f6b+",
+        "f6c",
+        "f6c+",
+        "f7a",
+        "f7a+",
+        "f7b",
+        "f7b+",
+        "f7c",
+        "f7c+",
+        "f8a",
+        "f8a+",
+        "f8b",
+        "f8b+",
+        "f8c",
+        "f8c+",
+        "f9a",
+      ],
       thresholds: [3, 6, 12, 18],
-      range: []
+      range: [],
     },
     boulderingV: {
-      grades: ['VB', 'V0-', 'V0', 'V0+', 'V1', 'V2', 'V3', 'V4', 'V5', 'V6', 'V7', 'V8', 'V9', 'V10', 'V11', 'V12', 'V13', 'V14', 'V15'],
+      grades: [
+        "VB",
+        "V0-",
+        "V0",
+        "V0+",
+        "V1",
+        "V2",
+        "V3",
+        "V4",
+        "V5",
+        "V6",
+        "V7",
+        "V8",
+        "V9",
+        "V10",
+        "V11",
+        "V12",
+        "V13",
+        "V14",
+        "V15",
+      ],
       thresholds: [3, 6, 9, 13],
-      range: []
+      range: [],
     },
     trad: {
-      grades: ['m', 'd', 'vd', 'hvd', 's', 'hs', 'vs', 'hvs', 'e1', 'e2', 'e3', 'e4', 'e5', 'e6', 'e7', 'e8', 'e9', 'e10', 'e11'],
+      grades: [
+        "m",
+        "d",
+        "vd",
+        "hvd",
+        "s",
+        "hs",
+        "vs",
+        "hvs",
+        "e1",
+        "e2",
+        "e3",
+        "e4",
+        "e5",
+        "e6",
+        "e7",
+        "e8",
+        "e9",
+        "e10",
+        "e11",
+      ],
       thresholds: [5, 8, 11, 14],
-      range: []
+      range: [],
     },
     sport: {
-      grades: ['1', '2', '2+', '3a', '3b', '3c', '4a', '4b', '4c', '5a', '5b', '5c', '6a', '6a+', '6b', '6b+', '6c', '6c+', '7a', '7a+', '7b', '7b+', '7c', '7c+', '8a', '8a+', '8b', '8b+', '8c', '8c+', '9a', '9a+', '9b', '9b+'],
+      grades: [
+        "1",
+        "2",
+        "2+",
+        "3a",
+        "3b",
+        "3c",
+        "4a",
+        "4b",
+        "4c",
+        "5a",
+        "5b",
+        "5c",
+        "6a",
+        "6a+",
+        "6b",
+        "6b+",
+        "6c",
+        "6c+",
+        "7a",
+        "7a+",
+        "7b",
+        "7b+",
+        "7c",
+        "7c+",
+        "8a",
+        "8a+",
+        "8b",
+        "8b+",
+        "8c",
+        "8c+",
+        "9a",
+        "9a+",
+        "9b",
+        "9b+",
+      ],
       thresholds: [9, 14, 19, 24],
-      range: []
-    }
-  }
+      range: [],
+    },
+  };
 
   // Counts
   let beginner = 0;
@@ -210,44 +306,49 @@ const addCragStats = async (req: Request, res: Response) => {
     boulderingV: 0,
     boulderingFont: 0,
     sport: 0,
-    trad: 0
-  }
+    trad: 0,
+  };
 
   let stars = 0;
 
-  routes.forEach(route => {
+  routes.forEach((route) => {
     const grade = route.grade.toUpperCase();
-    const climbingTypeID = route.climbingTypeID
+    const climbingTypeID = route.climbingTypeID;
     stars += route.stars;
 
     let gradeSystem: Grades | undefined;
     let index: string | undefined;
 
     if (climbingTypeID === 2) {
-      if (grade.startsWith('F')) {
+      if (grade.startsWith("F")) {
         gradeSystem = gradeSystems.boulderingFont;
-        index = 'boulderingFont';
+        index = "boulderingFont";
         typeCount.boulderingFont++;
-      } else if (grade.startsWith('V')) {
+      } else if (grade.startsWith("V")) {
         gradeSystem = gradeSystems.boulderingV;
-        index = 'boulderingV';
+        index = "boulderingV";
         typeCount.boulderingV++;
       }
     } else if (climbingTypeID === 3) {
       gradeSystem = gradeSystems.trad;
-      index = 'trad';
+      index = "trad";
       typeCount.trad++;
     } else if (climbingTypeID === 4) {
       gradeSystem = gradeSystems.sport;
-      index = 'sport';
+      index = "sport";
       typeCount.sport++;
     }
 
     if (gradeSystem && index) {
-      const gradeIndex = gradeSystem.grades.findIndex(g => g.toUpperCase() === grade);
+      const gradeIndex = gradeSystem.grades.findIndex(
+        (g) => g.toUpperCase() === grade,
+      );
 
       if (gradeIndex !== -1) {
-        gradeSystems[index].range = [Math.min(gradeIndex, gradeSystems[index].range[0] || gradeIndex), Math.max(gradeIndex, gradeSystems[index].range[1] || gradeIndex)];
+        gradeSystems[index].range = [
+          Math.min(gradeIndex, gradeSystems[index].range[0] || gradeIndex),
+          Math.max(gradeIndex, gradeSystems[index].range[1] || gradeIndex),
+        ];
 
         const thresholds = gradeSystem.thresholds;
         if (gradeIndex <= thresholds[0]) beginner++;
@@ -259,7 +360,7 @@ const addCragStats = async (req: Request, res: Response) => {
     } else {
       console.log(`Climbing type ID ${climbingTypeID} not supported.`);
     }
-  })
+  });
 
   let mainClimbingType: string | null = null;
   let mainClimbingTypeCount = 0;
@@ -274,8 +375,19 @@ const addCragStats = async (req: Request, res: Response) => {
 
   if (mainClimbingType) {
     const rangeIndex = gradeSystems[mainClimbingType].range;
-    const rangeArr = rangeIndex[0] !== rangeIndex[1] ? gradeSystems[mainClimbingType].grades.slice(rangeIndex[0], rangeIndex[1] + 1) : [gradeSystems[mainClimbingType].grades[rangeIndex[0]], gradeSystems[mainClimbingType].grades[rangeIndex[0]]]
-    const range = rangeArr.every(grade => grade !== undefined) ? `${rangeArr[0]},${rangeArr[rangeArr.length - 1]}` : '';
+    const rangeArr =
+      rangeIndex[0] !== rangeIndex[1]
+        ? gradeSystems[mainClimbingType].grades.slice(
+            rangeIndex[0],
+            rangeIndex[1] + 1,
+          )
+        : [
+            gradeSystems[mainClimbingType].grades[rangeIndex[0]],
+            gradeSystems[mainClimbingType].grades[rangeIndex[0]],
+          ];
+    const range = rangeArr.every((grade) => grade !== undefined)
+      ? `${rangeArr[0]},${rangeArr[rangeArr.length - 1]}`
+      : "";
 
     await prisma.cragStats.create({
       data: {

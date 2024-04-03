@@ -1,7 +1,7 @@
-import React from 'react';
-import { Box, Text } from '@chakra-ui/react';
-import { PieChart, Pie, Cell, ResponsiveContainer } from 'recharts';
-import { Crag } from '../../types/types';
+import React from "react";
+import { Box, Text } from "@chakra-ui/react";
+import { PieChart, Pie, Cell, ResponsiveContainer } from "recharts";
+import { Crag } from "../../types/types";
 
 interface PieChartComponentProps {
   crag: Crag;
@@ -31,24 +31,34 @@ const renderCustomizedLabel = ({
   if (percent < 0.12) return null;
 
   return (
-    <text x={x} y={y} fill="white" textAnchor={x > cx ? 'start' : 'end'} dominantBaseline="central">
+    <text
+      x={x}
+      y={y}
+      fill="white"
+      textAnchor={x > cx ? "start" : "end"}
+      dominantBaseline="central"
+    >
       {`${(percent * 100).toFixed(0)}%`}
     </text>
   );
 };
 
-export const PieChartComponent: React.FC<PieChartComponentProps> = ({ crag }) => {
-
+export const PieChartComponent: React.FC<PieChartComponentProps> = ({
+  crag,
+}) => {
   const cragStats = crag.cragStats;
-  const COLOURS = ['#339966', '#FFCC00', '#CC3333', '#333333', '#FFF5EE'];
+  const COLOURS = ["#339966", "#FFCC00", "#CC3333", "#333333", "#FFF5EE"];
 
-  const cragDifficulty: { name: string, value: number }[] = [
-    { name: 'beginner', value: cragStats?.beginner ? cragStats?.beginner : 0 },
-    { name: 'advanced', value: cragStats?.advanced ? cragStats?.advanced : 0 },
-    { name: 'experienced', value: cragStats?.experienced ? cragStats?.experienced : 0 },
-    { name: 'expert', value: cragStats?.expert ? cragStats?.expert : 0 },
-    { name: 'elite', value: cragStats?.elite ? cragStats?.elite : 0 },
-  ].filter(item => item.value > 0);
+  const cragDifficulty: { name: string; value: number }[] = [
+    { name: "beginner", value: cragStats?.beginner ? cragStats?.beginner : 0 },
+    { name: "advanced", value: cragStats?.advanced ? cragStats?.advanced : 0 },
+    {
+      name: "experienced",
+      value: cragStats?.experienced ? cragStats?.experienced : 0,
+    },
+    { name: "expert", value: cragStats?.expert ? cragStats?.expert : 0 },
+    { name: "elite", value: cragStats?.elite ? cragStats?.elite : 0 },
+  ].filter((item) => item.value > 0);
 
   if (cragDifficulty.length > 0) {
     return (
@@ -66,12 +76,21 @@ export const PieChartComponent: React.FC<PieChartComponentProps> = ({ crag }) =>
               dataKey="value"
             >
               {cragDifficulty.map((entry, index) => (
-                <Cell key={`${entry.name}`} fill={COLOURS[index % COLOURS.length]} />
+                <Cell
+                  key={`${entry.name}`}
+                  fill={COLOURS[index % COLOURS.length]}
+                />
               ))}
             </Pie>
           </PieChart>
         </ResponsiveContainer>
-        <Box display="flex" height="5%" justifyContent="center" textAlign="left" className="pie-chart-key">
+        <Box
+          display="flex"
+          height="5%"
+          justifyContent="center"
+          textAlign="left"
+          className="pie-chart-key"
+        >
           <Text fontSize="sm">
             Routes: {cragDifficulty.reduce((acc, curr) => acc + curr.value, 0)}
           </Text>

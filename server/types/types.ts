@@ -11,7 +11,7 @@ export interface Crag {
   climbingTypes: number[];
   cragInfo?: CragInfo;
   routes?: Route[];
-};
+}
 
 export interface CragInfo {
   cragID: number;
@@ -30,5 +30,3 @@ export interface Route {
   stars: number;
   logs: number;
 }
-
-

@@ -14,7 +14,7 @@ const getCrags = async function (req: Request, res: Response) {
         cragInfo: true,
         routes: true,
         cragStats: true,
-      }
+      },
     });
 
     // filter out the crags which are not within the KMs specified
@@ -55,14 +55,12 @@ const getCrags = async function (req: Request, res: Response) {
   }
 };
 
-
 const getAll = async (req: Request, res: Response) => {
-
   try {
     const allCrags: Crag[] = await prisma.crag.findMany({
       include: {
-        climbingType: true
-      }
+        climbingType: true,
+      },
     });
     res.status(200).json(allCrags);
   } catch (err) {
@@ -71,7 +69,7 @@ const getAll = async (req: Request, res: Response) => {
       .status(500)
       .json({ data: null, error: { code: 500, msg: "An error occurred." } });
   }
-}
+};
 // create funciton that recieves cragId and checks whether a cragInfo for that ID exists. If it does return status code 201 otherwise return 200
 
 const cragInfoExists = async (req: Request, res: Response) => {
@@ -90,12 +88,9 @@ const cragInfoExists = async (req: Request, res: Response) => {
     }
   } catch (err) {
     console.error(err, "error");
-    res
-      .status(500)
-      .json({ error: { code: 500, msg: "An error occurred." } });
+    res.status(500).json({ error: { code: 500, msg: "An error occurred." } });
   }
-}
-
+};
 
 // do the same as above but for routes called cragRoutesExists
 const cragRoutesExists = async (req: Request, res: Response) => {
@@ -113,11 +108,9 @@ const cragRoutesExists = async (req: Request, res: Response) => {
     }
   } catch (err) {
     console.error(err, "error");
-    res
-      .status(500)
-      .json({ error: { code: 500, msg: "An error occurred." } });
+    res.status(500).json({ error: { code: 500, msg: "An error occurred." } });
   }
-}
+};
 
 function getDistanceFromLatLonInKm(
   latStart: number,
@@ -131,9 +124,9 @@ function getDistanceFromLatLonInKm(
   var a =
     Math.sin(dLat / 2) * Math.sin(dLat / 2) +
     Math.cos(deg2rad(latStart)) *
-    Math.cos(deg2rad(latEnd)) *
-    Math.sin(dLon / 2) *
-    Math.sin(dLon / 2);
+      Math.cos(deg2rad(latEnd)) *
+      Math.sin(dLon / 2) *
+      Math.sin(dLon / 2);
   var c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
   var d = R * c;
 
@@ -144,12 +137,11 @@ function deg2rad(deg: number) {
   return deg * (Math.PI / 180);
 }
 
-
 const controller = {
   getCrags,
   getAll,
   cragRoutesExists,
-  cragInfoExists
+  cragInfoExists,
 };
 
 export default controller;

@@ -4,3 +4,8 @@
   box-sizing: border-box;
   font-family: "Montserrat", sans-serif;
 }
+
+.leaflet-container.leaflet-touch.leaflet-fade-anim.leaflet-grab.leaflet-touch-drag.leaflet-touch-zoom {
+  height: 100%;
+  height: 200px;
+}

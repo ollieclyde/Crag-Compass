@@ -6,7 +6,7 @@ import {
   Text,
   Flex,
   Wrap,
-  WrapItem
+  WrapItem,
 } from "@chakra-ui/react";
 import { Crag } from "../types/types";
 import { CragFilters } from "./crag-filters";
@@ -39,7 +39,9 @@ export function SearchResults({
     const cragsToSort = [...filteredCrags];
 
     const sortedFilteredCrags = cragsToSort.sort((a, b) => {
-      return routeFlag ? +a.routeCount - +b.routeCount : +b.routeCount - +a.routeCount;
+      return routeFlag
+        ? +a.routeCount - +b.routeCount
+        : +b.routeCount - +a.routeCount;
     });
 
     setFilteredCrags(sortedFilteredCrags);
@@ -96,7 +98,12 @@ export function SearchResults({
     <>
       <Box width="100%">
         <Flex alignItems="center">
-          <Flex padding='1rem' alignItems='center' gap='2rem' className="search-filter">
+          <Flex
+            padding="1rem"
+            alignItems="center"
+            gap="2rem"
+            className="search-filter"
+          >
             <IconButton
               variant="none"
               onClick={filterHandler}
@@ -119,10 +126,10 @@ export function SearchResults({
         <Wrap justify="center" spacing="20px" padding="20px">
           {Array.isArray(currentPageCrags)
             ? currentPageCrags.map((crag: Crag) => (
-              <WrapItem key={crag.cragID}>
-                <CragCard crag={crag} daysFromNow={daysFromNow} />
-              </WrapItem>
-            ))
+                <WrapItem key={crag.cragID}>
+                  <CragCard crag={crag} daysFromNow={daysFromNow} />
+                </WrapItem>
+              ))
             : null}
         </Wrap>
         <Flex justifyContent="space-around">

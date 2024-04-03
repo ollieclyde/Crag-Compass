@@ -19,14 +19,41 @@ import {
   ModalBody,
   ModalCloseButton,
   Box,
+  FormErrorMessage,
 } from "@chakra-ui/react";
 import { useState, useEffect } from "react";
 import moment from "moment";
 import { Search2Icon } from "@chakra-ui/icons";
-import { SearchModalProps, SearchState } from "../types/types";
-// import GooglePlacesAutocomplete from "react-google-places-autocomplete";
-import "../App.css";
+import { SearchState } from "../types/types";
 import { geocodeLocation } from "../helpers/googleAPI";
+
+export interface SearchModalProps {
+  setSearchState: Function;
+  searchState: SearchState;
+  basicFilter: Function;
+  setFilteredCrags: Function;
+  fetchCrags: (lng: string, lat: string, distRange: number[]) => Promise<void>;
+  onOpen: () => void;
+  isOpen: boolean;
+  onClose: () => void;
+};
+
+const climbingTypes = [
+  { value: "all", label: "All" },
+  { value: "bouldering", label: "Bouldering" },
+  { value: "trad", label: "Trad" },
+  { value: "sport", label: "Sport" },
+];
+
+const rockTypes = [
+  { value: "all", label: "All" },
+  { value: "granite", label: "Granite" },
+  { value: "limestone", label: "Limestone" },
+  { value: "grit", label: "Grit" },
+  { value: "artificial", label: "Artificial" },
+  { value: "sandstone", label: "Sandstone" },
+  { value: "slate", label: "Slate" },
+];
 
 const SearchModal: React.FC<SearchModalProps> = ({
   searchState,
@@ -38,71 +65,112 @@ const SearchModal: React.FC<SearchModalProps> = ({
 }) => {
   const currentDateTime = moment().format("YYYY-MM-DDTHH:mm");
 
-  const [location, setLocation] = useState<string>('London');
+  const [initialState, setInitialState] = useState<SearchState | null>(null);
+
+  const [location, setLocation] = useState<string>("London");
   const [departureDate, setDepartureDate] = useState<string>(currentDateTime);
-  const [climbingType, setClimbingType] = useState<string[]>(['all']);
-  const [rockType, setRockType] = useState<string[]>(['all']);
+  const [climbingType, setClimbingType] = useState<string[]>(["all"]);
+  const [rockType, setRockType] = useState<string[]>(["all"]);
   const [numOfRoutes, setNumOfRoutes] = useState<number[]>([0, 250]);
   const [distRange, setDistRange] = useState<number[]>([0, 50]);
   const [daysFromNow, setDaysFromNow] = useState<number>(0);
-  const [minDate, setMinDate] = useState<string>('');
-  const [maxDate, setMaxDate] = useState<string>('');
+  const [minDate, setMinDate] = useState<string>("");
+  const [maxDate, setMaxDate] = useState<string>("");
+
+  const [locationErrorFlag, setLocationErrorFlag] = useState<boolean>(false);
 
   const searchHandler = async () => {
-    let coords = searchState.coords;
-    if (location !== '') {
-      if (
-        location !== searchState.location ||
-        distRange[0] !== searchState.distRange[0] ||
-        distRange[1] !== searchState.distRange[1]
-      ) {
-        const newCoords = await geocodeLocation(location);
-        if (newCoords) {
-          fetchCrags(newCoords.lng, newCoords.lat, distRange);
-          coords = newCoords;
-        }
-      }
+    const hasLocationChanged = location !== searchState.location;
+    const hasDistRangeChanged = distRange[0] !== searchState.distRange[0] || distRange[1] !== searchState.distRange[1];
+
+    // If there's no change, update the state and close the modal directly.
+    if (!hasLocationChanged && !hasDistRangeChanged) {
       const newSearchState: SearchState = {
         location: location,
-        coords: coords,
+        coords: searchState.coords,
         departureDate: departureDate,
         daysFromNow: daysFromNow,
         climbingType: climbingType,
         rockType: rockType,
         numOfRoutes: numOfRoutes,
         distRange: distRange,
-      }
-      setSearchState(newSearchState)
+      };
+      setSearchState(newSearchState);
+      setLocationErrorFlag(false);
+      setInitialState(null)
       onClose();
+      return;
+    }
+    try {
+      const newCoords = await geocodeLocation(location);
+      if (newCoords) {
+        fetchCrags(newCoords.lng, newCoords.lat, distRange);
+        const newSearchState: SearchState = {
+          location: location,
+          coords: newCoords,
+          departureDate: departureDate,
+          daysFromNow: daysFromNow,
+          climbingType: climbingType,
+          rockType: rockType,
+          numOfRoutes: numOfRoutes,
+          distRange: distRange,
+        };
+        setLocationErrorFlag(false);
+        setSearchState(newSearchState);
+        setInitialState(null)
+        onClose();
+      } else {
+        setLocationErrorFlag(true);
+      }
+    } catch (error) {
+      console.error("Error fetching location:", error);
     }
   }
 
+  const customOnClose = () => {
+    setLocation(initialState?.location || "London");
+    setDepartureDate(initialState?.departureDate || currentDateTime);
+    setClimbingType(initialState?.climbingType || ["all"]);
+    setRockType(initialState?.rockType || ["all"]);
+    setNumOfRoutes(initialState?.numOfRoutes || [0, 250]);
+    setDistRange(initialState?.distRange || [0, 50]);
+    setDaysFromNow(initialState?.daysFromNow || 0);
+    setLocationErrorFlag(false);
+    setInitialState(null);
+    onClose();
+  };
+
   useEffect(() => {
     const currentDate = new Date();
-    const sevenDaysFromNow = new Date(currentDate.getTime() + 6 * 24 * 60 * 60 * 1000);
+    const sevenDaysFromNow = new Date(
+      currentDate.getTime() + 6 * 24 * 60 * 60 * 1000,
+    );
 
     const formatDateToInput = (date: Date) => {
-      let month = '' + (date.getMonth() + 1),
-        day = '' + date.getDate(),
+      let month = "" + (date.getMonth() + 1),
+        day = "" + date.getDate(),
         year = date.getFullYear(),
-        hours = '' + date.getHours(),
-        minutes = '' + date.getMinutes();
+        hours = "" + date.getHours(),
+        minutes = "" + date.getMinutes();
 
-      if (month.length < 2)
-        month = '0' + month;
-      if (day.length < 2)
-        day = '0' + day;
-      if (hours.length < 2)
-        hours = '0' + hours;
-      if (minutes.length < 2)
-        minutes = '0' + minutes;
+      if (month.length < 2) month = "0" + month;
+      if (day.length < 2) day = "0" + day;
+      if (hours.length < 2) hours = "0" + hours;
+      if (minutes.length < 2) minutes = "0" + minutes;
 
-      return [year, month, day].join('-') + 'T' + [hours, minutes].join(':');
+      return [year, month, day].join("-") + "T" + [hours, minutes].join(":");
     };
 
     setMinDate(formatDateToInput(currentDate));
     setMaxDate(formatDateToInput(sevenDaysFromNow));
   }, []);
+
+  useEffect(() => {
+    if (isOpen && initialState === null) {
+      setInitialState(searchState);
+    }
+  }, [isOpen, searchState, initialState]);
+
 
   const getDaysFromNow = (dateString: string): number => {
     const oneDay = 24 * 60 * 60 * 1000;
@@ -119,7 +187,7 @@ const SearchModal: React.FC<SearchModalProps> = ({
   const handleDateChange = (value: string) => {
     setDaysFromNow(getDaysFromNow(value));
     setDepartureDate(value);
-  }
+  };
 
   const handleCheckboxChange = (
     setter: Function,
@@ -128,17 +196,16 @@ const SearchModal: React.FC<SearchModalProps> = ({
     const flag = values.includes("all");
     if (values[0] === "all" && values.length > 1) {
       setter(values.filter((value) => value !== "all"));
-    } else if (!flag) {
-      setter(values);
-    } else {
+    } else if (flag || !values.length) {
       setter(["all"]);
+    } else {
+      setter(values);
     }
   };
 
   return (
-    <div className="search-container">
+    <Box paddingRight="10rem">
       <IconButton
-        className="search-icon"
         aria-label="Search database"
         background="transparent"
         variant="none"
@@ -147,7 +214,7 @@ const SearchModal: React.FC<SearchModalProps> = ({
         icon={<Search2Icon />}
       />
       <Modal
-        onClose={onClose}
+        onClose={customOnClose}
         size={"xl"}
         isOpen={isOpen}
         closeOnEsc
@@ -164,25 +231,9 @@ const SearchModal: React.FC<SearchModalProps> = ({
             display="flex"
             flexDirection={"column"}
             gap="20px"
-            className="modal-body"
           >
-            <FormControl className="form-content" isRequired>
-              <FormLabel fontWeight="bold">Location</FormLabel>
-              {/* <GooglePlacesAutocomplete
-                apiOptions={{ language: 'en', region: 'gb' }}
-                autocompletionRequest={{
-                  componentRestrictions: {
-                    country: ['gb'],
-                  }
-                }}
-                selectProps={{
-                  onChange: (address) => {
-                    if (address) {
-                      setLocation(address.label)
-                    }
-                  }
-                }}
-              /> */}
+            <FormControl isInvalid={locationErrorFlag} isRequired>
+              <FormLabel fontWeight="bold">Departure Location</FormLabel>
               <Input
                 isRequired={true}
                 type="text"
@@ -190,9 +241,12 @@ const SearchModal: React.FC<SearchModalProps> = ({
                 onChange={(e) => setLocation(e.target.value)}
                 min={currentDateTime}
               />
+              {locationErrorFlag && (
+                <FormErrorMessage> Location cannot be found</FormErrorMessage>
+              )}
             </FormControl>
 
-            <FormControl className="form-content">
+            <FormControl >
               <FormLabel fontWeight="bold">Depature Time</FormLabel>
               <Input
                 type="datetime-local"
@@ -203,7 +257,7 @@ const SearchModal: React.FC<SearchModalProps> = ({
               />
             </FormControl>
 
-            <FormControl className="form-content">
+            <FormControl>
               <FormLabel fontWeight="bold">Climbing Type</FormLabel>
               <CheckboxGroup
                 value={climbingType}
@@ -211,34 +265,32 @@ const SearchModal: React.FC<SearchModalProps> = ({
                   handleCheckboxChange(setClimbingType, event)
                 }
               >
-                <Stack spacing={5} direction="row">
-                  <Checkbox value="all">All</Checkbox>
-                  <Checkbox value="bouldering">Bouldering</Checkbox>
-                  <Checkbox value="trad">Trad</Checkbox>
-                  <Checkbox value="sport">Sport</Checkbox>
+                <Stack spacing={8} direction="row">
+                  {climbingTypes.map((type) => (
+                    <Checkbox key={type.value} value={type.value}>{type.label}</Checkbox>
+                  ))}
                 </Stack>
               </CheckboxGroup>
             </FormControl>
 
-            <FormControl className="form-content">
+            <FormControl>
               <FormLabel fontWeight="bold">Rock Type</FormLabel>
               <CheckboxGroup
                 value={rockType}
                 onChange={(event) => handleCheckboxChange(setRockType, event)}
               >
-                <Stack spacing={5} direction="row">
-                  <Checkbox value="all">All</Checkbox>
-                  <Checkbox value="granite">Granite</Checkbox>
-                  <Checkbox value="limestone">Limestone</Checkbox>
-                  <Checkbox value="grit">Grit</Checkbox>
-                  <Checkbox value="artificial">Artificial</Checkbox>
-                  <Checkbox value="sandstone">Sandstone</Checkbox>
+                <Stack wrap="wrap" spacing={8} direction="row">
+                  {rockTypes.map((type) => (
+                    <Checkbox key={type.value} value={type.value}>{type.label}</Checkbox>
+                  ))}
                 </Stack>
               </CheckboxGroup>
             </FormControl>
 
-            <FormControl className="form-content">
-              <FormLabel fontWeight="bold" pb="1rem">Routes</FormLabel>
+            <FormControl >
+              <FormLabel fontWeight="bold" pb="1rem">
+                Routes
+              </FormLabel>
               <RangeSlider
                 aria-label={["min", "max"]}
                 min={0}
@@ -252,12 +304,12 @@ const SearchModal: React.FC<SearchModalProps> = ({
                   <RangeSliderFilledTrack />
                 </RangeSliderTrack>
                 <RangeSliderThumb index={0}>
-                  <Box className="grade-slider-value">
+                  <Box paddingBottom="40px">
                     <span>{numOfRoutes[0]}</span>
                   </Box>
                 </RangeSliderThumb>
                 <RangeSliderThumb index={1}>
-                  <Box className="grade-slider-value">
+                  <Box paddingBottom="40px">
                     <span>
                       {numOfRoutes[1] !== 500
                         ? numOfRoutes[1]
@@ -268,8 +320,10 @@ const SearchModal: React.FC<SearchModalProps> = ({
               </RangeSlider>
             </FormControl>
 
-            <FormControl className="form-content">
-              <FormLabel fontWeight="bold" pb="2rem">Distance</FormLabel>
+            <FormControl>
+              <FormLabel fontWeight="bold" pb="2rem">
+                Distance
+              </FormLabel>
               <RangeSlider
                 aria-label={["min", "max"]}
                 defaultValue={distRange}
@@ -283,12 +337,12 @@ const SearchModal: React.FC<SearchModalProps> = ({
                   <RangeSliderFilledTrack />
                 </RangeSliderTrack>
                 <RangeSliderThumb index={0}>
-                  <Box className="distance-slider-value">
+                  <Box paddingBottom="40px">
                     {distRange[0] + "km"}
                   </Box>
                 </RangeSliderThumb>
                 <RangeSliderThumb index={1}>
-                  <Box className="distance-slider-value">
+                  <Box paddingBottom="40px">
                     {distRange[1] + "km"}
                   </Box>
                 </RangeSliderThumb>
@@ -307,7 +361,7 @@ const SearchModal: React.FC<SearchModalProps> = ({
           <ModalFooter></ModalFooter>
         </ModalContent>
       </Modal>
-    </div>
+    </Box>
   );
 };
 
