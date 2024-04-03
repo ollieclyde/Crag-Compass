@@ -1,6 +1,8 @@
 import axios from "axios";
 import { Crag, WeatherDataDay } from "./types/types";
 
+const serverURL: string = import.meta.env.VITE_SERVER_URL || "http://localhost:3000";
+
 const getAllCrags = async (
   lng: string,
   lat: string,
@@ -8,7 +10,7 @@ const getAllCrags = async (
 ): Promise<Crag[] | undefined> => {
   try {
     const allCrags = await axios.get(
-      `http://localhost:3000/crags/lng/${lng}/lat/${lat}/dist/${maxDist}`,
+      `${serverURL}/crags/lng/${lng}/lat/${lat}/dist/${maxDist}`,
     );
     return allCrags.data;
   } catch (err) {

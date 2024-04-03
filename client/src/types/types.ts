@@ -1,21 +1,21 @@
 export interface ClimbingType {
   id: number;
   name: string;
-};
+}
 
 export interface SearchValues {
   location: number[];
   depatureDate: string;
-  climbingType: any;
+  climbingType: ClimbingType[];
   rockType: string;
   gradeRange: string[];
   driveLength: number[];
-};
+}
 
 export interface Coords {
   lng: string;
   lat: string;
-};
+}
 
 export interface Crag {
   cragID: number;
@@ -76,7 +76,7 @@ export interface WeatherDataDay {
   weather_code: number[];
   wind_direction_10m_dominant: number[];
   wind_speed_10m_max: number[];
-};
+}
 
 export interface SearchState {
   location: string;

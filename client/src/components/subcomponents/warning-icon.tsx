@@ -1,5 +1,5 @@
 import React from "react";
-import { Icon, Box } from "@chakra-ui/react";
+import { Icon } from "@chakra-ui/react";
 import { FaInfoCircle } from "react-icons/fa";
 import { IoMdWarning } from "react-icons/io";
 import { RiErrorWarningFill } from "react-icons/ri";

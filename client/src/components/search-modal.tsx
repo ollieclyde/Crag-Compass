@@ -149,11 +149,11 @@ const SearchModal: React.FC<SearchModalProps> = ({
     );
 
     const formatDateToInput = (date: Date) => {
-      let month = "" + (date.getMonth() + 1),
-        day = "" + date.getDate(),
-        year = date.getFullYear(),
-        hours = "" + date.getHours(),
-        minutes = "" + date.getMinutes();
+      let minutes = "" + date.getMinutes()
+      let day = "" + date.getDate()
+      let hours = "" + date.getHours()
+      let month = "" + (date.getMonth() + 1)
+      const year = date.getFullYear()
 
       if (month.length < 2) month = "0" + month;
       if (day.length < 2) day = "0" + day;

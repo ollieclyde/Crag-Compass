@@ -30,3 +30,20 @@ export interface Route {
   stars: number;
   logs: number;
 }
+
+export interface Grades {
+  grades: string[];
+  thresholds: number[];
+  range: number[];
+}
+
+export interface GradeSystems {
+  [gradeSystem: string]: Grades;
+}
+
+export interface TypeCount {
+  boulderingFont: number;
+  boulderingV: number;
+  trad: number;
+  sport: number;
+}

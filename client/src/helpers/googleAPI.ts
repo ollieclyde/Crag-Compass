@@ -46,25 +46,27 @@ export const distanceMatrix = async (
     +destinationCoords.lng,
   );
   const service = new google.maps.DistanceMatrixService();
-  const request: any = {
+
+  const request = {
     origins: [origin],
     destinations: [destination],
     travelMode: google.maps.TravelMode.DRIVING,
     drivingOptions: {
-      departureTime: departureDate,
+      departureTime: new Date(departureDate),
     },
   };
   try {
-    const results: any = await new Promise((resolve, reject) => {
-      service.getDistanceMatrix(request, (results, status) => {
-        if (status === "OK") {
-          resolve(results);
+    const response = await new Promise<google.maps.DistanceMatrixResponse>((resolve, reject) => {
+      service.getDistanceMatrix(request, (result, status) => {
+        if (status === google.maps.DistanceMatrixStatus.OK) {
+          if(result) resolve(result);
         } else {
-          reject(status);
+          reject(new Error(status));
         }
       });
     });
-    const timeInSecs = results?.rows[0]?.elements[0].duration_in_traffic?.value;
+
+    const timeInSecs = response?.rows[0]?.elements[0].duration_in_traffic?.value;
     if (timeInSecs) {
       return timeInSecs;
     } else {

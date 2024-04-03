@@ -90,9 +90,10 @@ export const PieChartComponent: React.FC<PieChartComponentProps> = ({
           justifyContent="center"
           textAlign="left"
           className="pie-chart-key"
+          paddingTop="3px"
         >
           <Text fontSize="sm">
-            Routes: {cragDifficulty.reduce((acc, curr) => acc + curr.value, 0)}
+            Routes: {crag.routeCount}
           </Text>
         </Box>
       </>
