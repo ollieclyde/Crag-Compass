@@ -24,7 +24,7 @@ const CragMap: React.FC<CragMapProps> = ({ osy, osx }) => {
       <Marker position={[latitude, longitude]}>
         <Popup>
           <a
-            href={`https://www.google.com/maps?q=${latitude},${longitude}`}
+            // href={`https://www.google.com/maps?q=${latitude},${longitude}`}
             target="_blank"
             rel="noopener noreferrer"
           >
