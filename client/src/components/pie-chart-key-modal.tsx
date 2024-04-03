@@ -8,13 +8,18 @@ import {
   ModalFooter,
   Image,
 } from "@chakra-ui/react";
-export const PieChartKeyModal = ({
-  pieChartKeyModalFlag,
-  setPieChartKeyModalFlag,
-}: {
+
+interface PieChartKeyModalProps {
   pieChartKeyModalFlag: boolean;
   setPieChartKeyModalFlag: Function;
-}) => {
+}
+
+ const PieChartKeyModal = ({
+  pieChartKeyModalFlag,
+  setPieChartKeyModalFlag,
+}:
+  PieChartKeyModalProps
+) => {
   return (
     <Modal
       isOpen={pieChartKeyModalFlag}
@@ -32,3 +37,5 @@ export const PieChartKeyModal = ({
     </Modal>
   );
 };
+
+export default PieChartKeyModal;

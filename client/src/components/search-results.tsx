@@ -9,12 +9,12 @@ import {
   WrapItem,
 } from "@chakra-ui/react";
 import { Crag } from "../types/types";
-import { CragFilters } from "./crag-filters";
+import CragFilters from "./crag-filters";
 import { IoFilter } from "react-icons/io5";
 import { ArrowForwardIcon, ArrowBackIcon } from "@chakra-ui/icons";
 import CragCard from "./crag-card";
 
-export function SearchResults({
+const SearchResults = ({
   filteredCrags,
   cragCount,
   setFilteredCrags,
@@ -24,7 +24,7 @@ export function SearchResults({
   cragCount: number;
   setFilteredCrags: Function;
   daysFromNow: number;
-}) {
+}) => {
   const [filterFlag, setFilterFlag] = useState<boolean>(false);
   const [routeFlag, setRouteFlag] = useState<boolean>(false);
   const [distanceFlag, setDistanceFlag] = useState<boolean>(false);
@@ -126,10 +126,10 @@ export function SearchResults({
         <Wrap justify="center" spacing="20px" padding="20px">
           {Array.isArray(currentPageCrags)
             ? currentPageCrags.map((crag: Crag) => (
-                <WrapItem key={crag.cragID}>
-                  <CragCard crag={crag} daysFromNow={daysFromNow} />
-                </WrapItem>
-              ))
+              <WrapItem key={crag.cragID}>
+                <CragCard crag={crag} daysFromNow={daysFromNow} />
+              </WrapItem>
+            ))
             : null}
         </Wrap>
         <Flex justifyContent="space-around">
@@ -144,3 +144,5 @@ export function SearchResults({
     </>
   );
 }
+
+export default SearchResults;

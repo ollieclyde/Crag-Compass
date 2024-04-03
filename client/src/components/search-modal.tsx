@@ -36,7 +36,7 @@ export interface SearchModalProps {
   onOpen: () => void;
   isOpen: boolean;
   onClose: () => void;
-};
+}
 
 const climbingTypes = [
   { value: "all", label: "All" },
@@ -81,7 +81,9 @@ const SearchModal: React.FC<SearchModalProps> = ({
 
   const searchHandler = async () => {
     const hasLocationChanged = location !== searchState.location;
-    const hasDistRangeChanged = distRange[0] !== searchState.distRange[0] || distRange[1] !== searchState.distRange[1];
+    const hasDistRangeChanged =
+      distRange[0] !== searchState.distRange[0] ||
+      distRange[1] !== searchState.distRange[1];
 
     // If there's no change, update the state and close the modal directly.
     if (!hasLocationChanged && !hasDistRangeChanged) {
@@ -97,7 +99,7 @@ const SearchModal: React.FC<SearchModalProps> = ({
       };
       setSearchState(newSearchState);
       setLocationErrorFlag(false);
-      setInitialState(null)
+      setInitialState(null);
       onClose();
       return;
     }
@@ -117,7 +119,7 @@ const SearchModal: React.FC<SearchModalProps> = ({
         };
         setLocationErrorFlag(false);
         setSearchState(newSearchState);
-        setInitialState(null)
+        setInitialState(null);
         onClose();
       } else {
         setLocationErrorFlag(true);
@@ -125,7 +127,7 @@ const SearchModal: React.FC<SearchModalProps> = ({
     } catch (error) {
       console.error("Error fetching location:", error);
     }
-  }
+  };
 
   const customOnClose = () => {
     setLocation(initialState?.location || "London");
@@ -170,7 +172,6 @@ const SearchModal: React.FC<SearchModalProps> = ({
       setInitialState(searchState);
     }
   }, [isOpen, searchState, initialState]);
-
 
   const getDaysFromNow = (dateString: string): number => {
     const oneDay = 24 * 60 * 60 * 1000;
@@ -227,11 +228,7 @@ const SearchModal: React.FC<SearchModalProps> = ({
             Crag Search
           </ModalHeader>
           <ModalCloseButton />
-          <ModalBody
-            display="flex"
-            flexDirection={"column"}
-            gap="20px"
-          >
+          <ModalBody display="flex" flexDirection={"column"} gap="20px">
             <FormControl isInvalid={locationErrorFlag} isRequired>
               <FormLabel fontWeight="bold">Departure Location</FormLabel>
               <Input
@@ -246,7 +243,7 @@ const SearchModal: React.FC<SearchModalProps> = ({
               )}
             </FormControl>
 
-            <FormControl >
+            <FormControl>
               <FormLabel fontWeight="bold">Depature Time</FormLabel>
               <Input
                 type="datetime-local"
@@ -267,7 +264,9 @@ const SearchModal: React.FC<SearchModalProps> = ({
               >
                 <Stack spacing={8} direction="row">
                   {climbingTypes.map((type) => (
-                    <Checkbox key={type.value} value={type.value}>{type.label}</Checkbox>
+                    <Checkbox key={type.value} value={type.value}>
+                      {type.label}
+                    </Checkbox>
                   ))}
                 </Stack>
               </CheckboxGroup>
@@ -281,13 +280,15 @@ const SearchModal: React.FC<SearchModalProps> = ({
               >
                 <Stack wrap="wrap" spacing={8} direction="row">
                   {rockTypes.map((type) => (
-                    <Checkbox key={type.value} value={type.value}>{type.label}</Checkbox>
+                    <Checkbox key={type.value} value={type.value}>
+                      {type.label}
+                    </Checkbox>
                   ))}
                 </Stack>
               </CheckboxGroup>
             </FormControl>
 
-            <FormControl >
+            <FormControl>
               <FormLabel fontWeight="bold" pb="1rem">
                 Routes
               </FormLabel>
@@ -337,14 +338,10 @@ const SearchModal: React.FC<SearchModalProps> = ({
                   <RangeSliderFilledTrack />
                 </RangeSliderTrack>
                 <RangeSliderThumb index={0}>
-                  <Box paddingBottom="40px">
-                    {distRange[0] + "km"}
-                  </Box>
+                  <Box paddingBottom="40px">{distRange[0] + "km"}</Box>
                 </RangeSliderThumb>
                 <RangeSliderThumb index={1}>
-                  <Box paddingBottom="40px">
-                    {distRange[1] + "km"}
-                  </Box>
+                  <Box paddingBottom="40px">{distRange[1] + "km"}</Box>
                 </RangeSliderThumb>
               </RangeSlider>
             </FormControl>

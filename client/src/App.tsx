@@ -7,21 +7,21 @@ import {
   useDisclosure,
   VStack,
 } from "@chakra-ui/react";
+import { useLoadScript } from "@react-google-maps/api";
+import moment from "moment";
 import { Crag, SearchState } from "./types/types";
 import APIService from "./Api-client-service";
-import { SearchResults } from "./components/search-results";
-import SearchModal from "./components/search-modal";
-import moment from "moment";
 import { googleMapLibrary } from "./helpers/googleAPI";
-import { useLoadScript } from "@react-google-maps/api";
+import SearchModal from "./components/search-modal";
+import SearchResults from "./components/search-results";
+
 
 const GoogleApiKey: string = import.meta.env.VITE_GOOGLE_API;
 
 function App() {
   const [crags, setCrags] = useState<Crag[]>([]);
-  const [filteredCrags, setFilteredCrags] = useState<Crag[]>([])
+  const [filteredCrags, setFilteredCrags] = useState<Crag[]>([]);
   const currentDateTime = moment().format("YYYY-MM-DDTHH:mm");
-
 
   const [searchState, setSearchState] = useState<SearchState>({
     location: "London",
@@ -85,7 +85,8 @@ function App() {
     const { numOfRoutes, climbingType, rockType } = searchState;
 
     const minRoutes = Number(numOfRoutes[0]);
-    const maxRoutes = numOfRoutes[1] !== 500 ? Number(numOfRoutes[1]) : Infinity;
+    const maxRoutes =
+      numOfRoutes[1] !== 500 ? Number(numOfRoutes[1]) : Infinity;
     const routeCount = Number(crag.routeCount);
 
     if (!routeCount || routeCount < minRoutes || routeCount > maxRoutes) {
@@ -96,20 +97,22 @@ function App() {
       return false;
     }
 
-    if (!crag.cragStats || Object.values(crag.cragStats).every(val => val === 0)) {
+    if (
+      !crag.cragStats ||
+      Object.values(crag.cragStats).every((val) => val === 0)
+    ) {
       return false;
     }
 
     if (climbingType[0] !== "all") {
-      const climbingTypeMatch = crag.climbingType.some(cragType =>
-        climbingType.includes(cragType.name.toLowerCase())
+      const climbingTypeMatch = crag.climbingType.some((cragType) =>
+        climbingType.includes(cragType.name.toLowerCase()),
       );
       if (!climbingTypeMatch) return false;
     }
 
     return true;
   };
-
 
   return (
     <Box height="100vh" width="100vw">

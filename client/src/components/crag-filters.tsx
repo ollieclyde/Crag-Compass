@@ -39,6 +39,6 @@ const CragFilters = ({
       </Flex>
     </>
   );
-}
+};
 
 export default CragFilters;

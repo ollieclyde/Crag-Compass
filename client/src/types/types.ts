@@ -1,9 +1,9 @@
-export type ClimbingType = {
+export interface ClimbingType {
   id: number;
   name: string;
 };
 
-export type SearchValues = {
+export interface SearchValues {
   location: number[];
   depatureDate: string;
   climbingType: any;
@@ -12,7 +12,7 @@ export type SearchValues = {
   driveLength: number[];
 };
 
-export type Coords = {
+export interface Coords {
   lng: string;
   lat: string;
 };
@@ -63,7 +63,7 @@ export interface Route {
   logs: number;
 }
 
-export type WeatherDataDay = {
+export interface WeatherDataDay {
   precipitation_hours: number[];
   precipitation_probability_max: number[];
   precipitation_sum: number[];
@@ -88,4 +88,3 @@ export interface SearchState {
   numOfRoutes: number[];
   distRange: number[];
 }
-

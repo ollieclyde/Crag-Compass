@@ -18,7 +18,7 @@ import { RiPinDistanceFill } from "react-icons/ri";
 import WeatherComponent from "./subcomponents/weather-component";
 import WarningIcon from "./subcomponents/warning-icon";
 
-export const FullCragInfoModal = ({
+const FullCragInfoModal = ({
   crag,
   daysFromNow,
   isOpen,
@@ -182,3 +182,6 @@ export const FullCragInfoModal = ({
     </>
   );
 };
+
+
+export default FullCragInfoModal;

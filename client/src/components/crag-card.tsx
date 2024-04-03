@@ -1,22 +1,22 @@
-import { Card, CardBody, Text, Box } from "@chakra-ui/react";
-import { MapContainer, TileLayer, Marker, Popup } from "react-leaflet";
-import { Crag } from "../types/types";
-import WeatherComponent from "./subcomponents/weather-component";
+import { Box, Card, CardBody, Text, useDisclosure } from "@chakra-ui/react";
+import { useState } from "react";
 import { GiMountainClimbing, GiStoneBlock } from "react-icons/gi";
 import { RiPinDistanceFill } from "react-icons/ri";
-import RatingComponent from "./subcomponents/rating-component";
-import { PieChartKeyModal } from "./pie-chart-key-modal";
-import { useDisclosure } from "@chakra-ui/react";
-import { FullCragInfoModal } from "./full-crag-info-modal";
+import { Crag } from "../types/types";
+import CragMap from "./subcomponents/leaflet-map-component";
+import FullCragInfoModal from "./full-crag-info-modal";
 import PieChartComponent from "./subcomponents/pie-chart";
-import { useState } from "react";
+import PieChartKeyModal from "./pie-chart-key-modal";
+import RatingComponent from "./subcomponents/rating-component";
 import WarningIcon from "./subcomponents/warning-icon";
+import WeatherComponent from "./subcomponents/weather-component";
+
 
 interface CragCardProps {
   crag: Crag;
   daysFromNow: number;
 }
-const CragCard: React.FC<CragCardProps> = ({ crag, daysFromNow }) => {
+const CragCard = ({ crag, daysFromNow }: CragCardProps) => {
   const { isOpen, onOpen, onClose } = useDisclosure();
   const [pieChartKeyModalFlag, setPieChartKeyModalFlag] =
     useState<boolean>(false);
@@ -50,27 +50,7 @@ const CragCard: React.FC<CragCardProps> = ({ crag, daysFromNow }) => {
           cursor="pointer"
         >
           <Box height="200px" width="100%">
-            <MapContainer
-              center={[+crag.osy, +crag.osx]}
-              zoom={13}
-              scrollWheelZoom={false}
-            >
-              <TileLayer
-                attribution=""
-                url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
-              />
-              <Marker position={[+crag.osy, +crag.osx]}>
-                <Popup>
-                  <a
-                    href={`https://www.google.com/maps?q=${crag.osy},${crag.osx}`}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                  >
-                    Open in Google Maps
-                  </a>
-                </Popup>
-              </Marker>
-            </MapContainer>
+            <CragMap osy={crag.osy} osx={crag.osx} />
           </Box>
 
           <Box onClick={onOpen} display="flex" paddingTop="7px">
