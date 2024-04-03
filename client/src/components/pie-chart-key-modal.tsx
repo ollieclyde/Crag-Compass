@@ -1,11 +1,5 @@
-// build out a modal that will display the key for the pie chart which is an Image from the assets folder
 
-// import all dependencies
-import React from 'react';
 import { Modal, ModalOverlay, ModalContent, ModalHeader, ModalCloseButton, ModalBody, ModalFooter, Image } from '@chakra-ui/react';
-
-
-// add is open arguments
 export const PieChartKeyModal = ({ pieChartKeyModalFlag, setPieChartKeyModalFlag }: { pieChartKeyModalFlag: boolean, setPieChartKeyModalFlag: Function }) => {
 
   return (

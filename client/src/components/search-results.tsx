@@ -1,14 +1,18 @@
 import { useState, useEffect } from "react";
 import {
-  Button,
+  Box,
   IconButton,
+  Button,
+  Text,
+  Flex,
+  Wrap,
+  WrapItem
 } from "@chakra-ui/react";
 import { Crag } from "../types/types";
 import { CragFilters } from "./crag-filters";
 import { IoFilter } from "react-icons/io5";
 import { ArrowForwardIcon, ArrowBackIcon } from "@chakra-ui/icons";
 import CragCard from "./crag-card";
-import "./search-results.css";
 
 export function SearchResults({
   filteredCrags,
@@ -43,7 +47,6 @@ export function SearchResults({
     setCurrentPage(0);
   };
 
-  // sort crags by distance - ascending or descending depending on the flag. Also set the current page back to the start.
   const handleDistanceFilter = () => {
     const cragsToSort = [...filteredCrags];
 
@@ -61,11 +64,9 @@ export function SearchResults({
     setCurrentPageCrags(slicedCrags);
   }, [filteredCrags, distanceFlag, routeFlag]);
 
-  // state to keep track of which page the user is on.
   const [currentPage, setCurrentPage] = useState(0);
   const itemsPerPage = 12;
 
-  // function to determine which page the user is on
   const pageCount = Math.ceil(filteredCrags.length / itemsPerPage);
 
   const handleNext = () => {
@@ -93,9 +94,9 @@ export function SearchResults({
 
   return (
     <>
-      <div className="search-results">
-        <div className="filter-search-results-container">
-          <div className="search-filter">
+      <Box width="100%">
+        <Flex alignItems="center">
+          <Flex padding='1rem' alignItems='center' gap='2rem' className="search-filter">
             <IconButton
               variant="none"
               onClick={filterHandler}
@@ -110,27 +111,29 @@ export function SearchResults({
                 routeFlag={routeFlag}
               />
             )}
-          </div>
-          <div className="search-results-number">
-            <p>Search results: {cragCount}</p>
-          </div>
-        </div>
-        <div className="crag-card-container">
+          </Flex>
+          <Box width="100%">
+            <Text>Search results: {cragCount}</Text>
+          </Box>
+        </Flex>
+        <Wrap justify="center" spacing="20px" padding="20px">
           {Array.isArray(currentPageCrags)
             ? currentPageCrags.map((crag: Crag) => (
-              <CragCard crag={crag} daysFromNow={daysFromNow}/>
+              <WrapItem key={crag.cragID}>
+                <CragCard crag={crag} daysFromNow={daysFromNow} />
+              </WrapItem>
             ))
             : null}
-        </div>
-        <div className="pagination-controls">
+        </Wrap>
+        <Flex justifyContent="space-around">
           <Button onClick={handlePrevious}>
             <ArrowBackIcon />
           </Button>
           <Button onClick={handleNext}>
             <ArrowForwardIcon />
           </Button>
-        </div>
-      </div>
+        </Flex>
+      </Box>
     </>
   );
 }

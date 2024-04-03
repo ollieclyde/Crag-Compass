@@ -1,15 +1,12 @@
-// build out a modal that will display the full crag information
 
-// import all dependencies
 import { Modal, Box, Text, ModalOverlay, ModalContent, ModalHeader, ModalCloseButton, ModalBody, ModalFooter, Image } from '@chakra-ui/react';
 import { Crag } from '../types/types';
-import RatingComponent from './rating-component';
+import RatingComponent from './subcomponents/rating-component';
 import { GiMountainClimbing, GiStoneBlock } from "react-icons/gi";
-import PieChartComponent from './pie-chart';
+import PieChartComponent from './subcomponents/pie-chart';
 import { RiPinDistanceFill } from "react-icons/ri";
-import WeatherComponent from './weather-component';
-import './full-crag-info-modal.css';
-import WarningIcon from './warning-icon';
+import WeatherComponent from './subcomponents/weather-component';
+import WarningIcon from './subcomponents/warning-icon';
 
 
 export const FullCragInfoModal = ({ crag, daysFromNow, isOpen, onClose, setPieChartKeyModalFlag }: { crag: Crag, daysFromNow: number, isOpen: boolean, onClose: Function, setPieChartKeyModalFlag: Function }) => {
@@ -29,17 +26,34 @@ export const FullCragInfoModal = ({ crag, daysFromNow, isOpen, onClose, setPieCh
           <ModalCloseButton />
           <ModalBody>
             {crag?.cragInfo?.img !== 'no image available' &&
-              (<Image src={crag.cragInfo?.img} alt="crag image" />)
-            }
-            <Box className="card-header-text">
+              (
+                <Box display="flex" flexDirection="row" justifyContent="center" alignItems="center" gap="10px">
+                  <Image src={crag.cragInfo?.img} alt="crag image" />
+                  <Box
+                    display="flex"
+                    flexDirection="row"
+                    justifyContent="space-evenly"
+                    width="100%"
+                    height="100%"
+                  >
+                    <Box height="20vh" onClick={() => { setPieChartKeyModalFlag(true) }} flex="1">
+                      <PieChartComponent crag={crag} />
+                    </Box>
+                    <Box flex="1">
+                      <WeatherComponent lat={crag.osy} lon={crag.osx} fullWeatherComponentFlag={true} daysFromNow={daysFromNow} />
+                    </Box>
+                  </Box>
+                </Box>
+              )}
+            <Box marginTop="15px" display="flex">
               <Text as="b" fontSize="larger" >
                 {crag.name}
               </Text>
-              <Box className="avg-rating-component">
+              <Box paddingLeft="7px">
                 <RatingComponent avgRating={crag.cragStats?.avgStars} />
               </Box>
             </Box>
-            <Box className="card-body-text">
+            <Box display="flex" gap="7px">
               <GiStoneBlock />
               <Text fontSize='small' >
                 {' ' + crag.rockType[0].toUpperCase() + crag.rockType.slice(1)}
@@ -59,8 +73,8 @@ export const FullCragInfoModal = ({ crag, daysFromNow, isOpen, onClose, setPieCh
               <RiPinDistanceFill />
               <Text fontSize='small'>{' ' + crag.distance}km</Text>
             </Box>
-            <Box className='features-approach-container'>
-              <Box className="features-container">
+            <Box display="flex" flexDirection="column" pt="10px" gap="20px" pb="10px">
+              <Box>
                 <Text>
                   Features
                 </Text>
@@ -68,7 +82,7 @@ export const FullCragInfoModal = ({ crag, daysFromNow, isOpen, onClose, setPieCh
                   {crag.cragInfo?.features}
                 </Text>
               </Box>
-              <Box className="approach-container">
+              <Box >
                 <Text>
                   Approach
                 </Text>
@@ -77,9 +91,9 @@ export const FullCragInfoModal = ({ crag, daysFromNow, isOpen, onClose, setPieCh
                 </Text>
               </Box>
               {crag?.cragInfo?.accessType !== undefined && crag.cragInfo.accessType !== 0 && (
-                <Box className="approach-container">
-                  <Box className='access-title-container'>
-                    <Text className='access-title'>
+                <Box>
+                  <Box display="flex" gap="15px" pb="5px">
+                    <Text display="flex" justifyContent="center" alignItems="center">
                       {accessTitles[crag.cragInfo.accessType]}
                     </Text>
                     <WarningIcon accessType={crag.cragInfo?.accessType} />
@@ -90,12 +104,23 @@ export const FullCragInfoModal = ({ crag, daysFromNow, isOpen, onClose, setPieCh
                 </Box>
               )}
             </Box>
-            <Box className="info-graphics-container-modal">
-              <PieChartComponent crag={crag} setPieChartKeyModalFlag={setPieChartKeyModalFlag} />
-              <Box className="weather-component-modal">
-                <WeatherComponent lat={crag.osy} lon={crag.osx} daysFromNow={daysFromNow} />
-              </Box>
-            </Box>
+            {crag?.cragInfo?.img === 'no image available' &&
+              (
+                <Box
+                  display="flex"
+                  justifyContent="start"
+                  alignItems="start"
+                  height="100%"
+                  width="100%"
+                >
+                  <Box height="20vh" width="15vw" onClick={() => { setPieChartKeyModalFlag(true) }} >
+                    <PieChartComponent crag={crag} />
+                  </Box>
+                  <Box>
+                    <WeatherComponent lat={crag.osy} lon={crag.osx} fullWeatherComponentFlag={true} daysFromNow={daysFromNow} />
+                  </Box>
+                </Box>
+              )}
           </ModalBody>
           <ModalFooter></ModalFooter>
         </ModalContent>

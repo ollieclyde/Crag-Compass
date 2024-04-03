@@ -23,9 +23,7 @@ const warningIcon: { [key: number]: IconType } = {
   3: RiErrorWarningFill,
 };
 
-// The WarningIcon component
 const WarningIcon: React.FC<WarningIconProps> = ({ accessType }) => {
-  // Default to a null component if no accessType is provided
   if (!accessType || !(accessType in warningColor && accessType in warningIcon)) {
     return null;
   }

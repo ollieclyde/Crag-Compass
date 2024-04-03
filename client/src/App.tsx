@@ -1,5 +1,7 @@
 import { useEffect, useState } from "react";
-import { useDisclosure } from "@chakra-ui/react";
+import {
+  Box, Flex, Image, Text, useDisclosure, VStack
+} from '@chakra-ui/react';
 import moment from "moment";
 import { Libraries, useLoadScript } from "@react-google-maps/api";
 import APIService from "./Api-client-service";
@@ -8,7 +10,6 @@ import { SearchResults } from "./components/search-results";
 import "./App.css";
 import { GeocodeResult } from "use-places-autocomplete";
 import SearchModal from "./components/search-modal";
-import { PieChartKeyModal } from "./components/pie-chart-key-modal";
 
 const GoogleApiKey: string = import.meta.env.VITE_GOOGLE_API;
 const googleMapLibrary: Libraries = ["places"];
@@ -87,10 +88,11 @@ function App() {
         return false;
       }
     }
-    // if the crag does not have a single route or number greater than 0 in the cragStats.begginer to elite properties
-    if (!crag.cragStats || crag?.cragStats?.beginner === 0 && crag?.cragStats?.advanced === 0 && crag?.cragStats?.experienced === 0&& crag.cragStats.expert === 0 && crag.cragStats.elite === 0) {
+    const stats = crag.cragStats;
+    if (!stats || Object.values(stats).every(val => val === 0)) {
       return false;
     }
+
     if (!climbingType.includes("all")) {
       let flag = false;
       for (let type of climbingType) {
@@ -106,41 +108,51 @@ function App() {
   };
 
   return (
-    <>
-      <div className="page-root">
-        <nav className="nav-bar">
-          <div className="title-logo-container">
-            <div className="logo-container">
-              <img
-                src="../assets/logo.png"
-                alt="A logo design for a climbing application named 'Crag Compass"
-              />
-            </div>
-            <div className="header-container">
-              <h1 className="title-text"> Crag Compass</h1>
-            </div>
-          </div>
-          <SearchModal
-            searchState={searchState}
-            setSearchState={setSearchState}
-            fetchCrags={fetchCrags}
-            basicFilter={basicFilter}
-            setFilteredCrags={setFilteredCrags}
-            isOpen={isOpen}
-            onOpen={onOpen}
-            onClose={onClose}
+    <Box height="100vh" width="100vw">
+      <Flex
+        as="nav"
+        height="18%"
+        border="5px"
+        backgroundColor="white"
+        justifyContent="space-between"
+        alignItems="center"
+        boxShadow="0 2px 6px lightgray"
+        paddingX="50px"
+      >
+        <Flex alignItems="center" gap="2rem">
+          <Image
+            src="../assets/logo.png"
+            alt="A logo design for a climbing application named 'Crag Compass"
+            boxSize="100px"
+            borderRadius="full"
+            objectFit="cover"
           />
-        </nav>
-        <section className="main-content">
-          <SearchResults
-            filteredCrags={filteredCrags}
-            cragCount={filteredCrags.length}
-            setFilteredCrags={setFilteredCrags}
-            daysFromNow={searchState.daysFromNow}
-          />
-        </section>
-      </div>
-    </>
+          <Text fontSize="30px" fontWeight="bold">Crag Compass</Text>
+        </Flex>
+        <SearchModal
+          searchState={searchState}
+          setSearchState={setSearchState}
+          fetchCrags={fetchCrags}
+          basicFilter={basicFilter}
+          setFilteredCrags={setFilteredCrags}
+          isOpen={isOpen}
+          onOpen={onOpen}
+          onClose={onClose}
+        />
+      </Flex>
+      <VStack
+        as="section"
+        flex="1"
+        paddingY="20px"
+      >
+        <SearchResults
+          filteredCrags={filteredCrags}
+          cragCount={filteredCrags.length}
+          setFilteredCrags={setFilteredCrags}
+          daysFromNow={searchState.daysFromNow}
+        />
+      </VStack>
+    </Box>
   );
 }
 

@@ -4,7 +4,6 @@ import prisma from "../models/db";
 import { Crag, CragInfo, Route } from "../types/types";
 
 
-
 const addCrag = async function (req: Request, res: Response) {
   try {
     const { crag }: { crag: Crag } = req.body;
@@ -105,6 +104,7 @@ const addRoute = async (req: Request, res: Response) => {
         climbingTypeID: routeData.climbingTypeID,
       },
     });
+    console.log(routeData, "routeData")
     if (!existingRoute) {
       await prisma.route.create({
         data: {
@@ -154,11 +154,26 @@ interface TypeCount {
 const addCragStats = async (req: Request, res: Response) => {
   const { cragID }: { cragID: number } = req.body;
 
+  const existingCragStats = await prisma.cragStats.findFirst({
+    where: {
+      cragID: cragID,
+    },
+  });
+  if (existingCragStats) {
+    res.status(204).json({ message: "Crag stats already exists" });
+    return;
+  }
+
   const routes = await prisma.route.findMany({
     where: {
       cragID: cragID,
     }
   })
+
+  if (routes.length === 0) {
+    res.status(204).json({ message: "No routes found for this crag" });
+    return;
+  }
 
   // Implement the climbingTypes with detailed structure
   const gradeSystems: GradeSystems = {
@@ -262,32 +277,25 @@ const addCragStats = async (req: Request, res: Response) => {
     const rangeArr = rangeIndex[0] !== rangeIndex[1] ? gradeSystems[mainClimbingType].grades.slice(rangeIndex[0], rangeIndex[1] + 1) : [gradeSystems[mainClimbingType].grades[rangeIndex[0]], gradeSystems[mainClimbingType].grades[rangeIndex[0]]]
     const range = rangeArr.every(grade => grade !== undefined) ? `${rangeArr[0]},${rangeArr[rangeArr.length - 1]}` : '';
 
-    // await prisma.cragStats.create({
-    //   data: {
-    //     mainClimbingType,
-    //     beginner,
-    //     experienced,
-    //     advanced,
-    //     expert,
-    //     elite,
-    //     avgStars,
-    //     range,
-    //     crag: {
-    //       connect: {
-    //         cragID: cragID,
-    //       },
-    //     },
-    //   },
-    // });
-
+    await prisma.cragStats.create({
+      data: {
+        mainClimbingType,
+        beginner,
+        experienced,
+        advanced,
+        expert,
+        elite,
+        avgStars,
+        range,
+        crag: {
+          connect: {
+            cragID: cragID,
+          },
+        },
+      },
+    });
   }
-
-
-
   res.status(200).json({ message: "Crag stats added successfully" });
-
 };
-
-
 
 export default { addCrag, addCragInfo, addRoute, addCragStats };

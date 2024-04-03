@@ -23,20 +23,20 @@ import {
 import { FiSunset } from "react-icons/fi";
 import { FiSunrise } from "react-icons/fi";
 
-import { Text } from "@chakra-ui/react";
-import { WeatherDataDay } from "../types/types";
-import APIService from "../Api-client-service";
-
-import "./weather-component.css";
+import { Text, Box, Icon } from "@chakra-ui/react";
+import { WeatherDataDay } from "../../types/types";
+import APIService from "../../Api-client-service";
 
 const WeatherComponent = ({
   lat,
   lon,
   daysFromNow,
+  fullWeatherComponentFlag,
 }: {
   lat: string;
   lon: string;
   daysFromNow: number;
+  fullWeatherComponentFlag: boolean;
 }) => {
   const [weatherData, setWeatherData] = useState<WeatherDataDay>();
 
@@ -70,7 +70,7 @@ const WeatherComponent = ({
 
   const windDirectionToIcon = (direction: number): JSX.Element => {
     if (direction >= 0 && direction < 22.5) {
-      return <TbCircleArrowUp/>
+      return <TbCircleArrowUp />
     }
     if (direction >= 22.5 && direction < 67.5) {
       return <TbCircleArrowUpRight />
@@ -104,49 +104,54 @@ const WeatherComponent = ({
     APIService.fetchWeather(url).then(
       (dailyForecasts: WeatherDataDay | undefined) => {
         if (dailyForecasts) {
-          console.log(dailyForecasts)
           setWeatherData(dailyForecasts);
         }
       },
     );
   }, [lat, lon]);
 
-  if (!weatherData) return <div>Loading...</div>;
+  if (!weatherData) return null
 
   return (
-    <div className="weather-container">
-      <div className="weather-icon-container">
+    <Box display="flex" justifyContent="center" alignItems="center" flexDirection="column" height="100%">
+      <Box display="flex" justifyContent="center">
         {
           weatherCodes[weatherData?.weather_code[daysFromNow]] ? weatherCodes[weatherData?.weather_code[daysFromNow]]
             : <TiWeatherCloudy size="4rem" />
         }
-      </div>
-      <p>
+      </Box>
+      <Text>
         {weatherData?.precipitation_sum[daysFromNow]}mm rain ({weatherData?.precipitation_probability_max[daysFromNow]}%)
-      </p>
-      <div className="temperature-wind-container">
-        <p>
+      </Text>
+      <Box>
+        <Text>
           {" "}
           {(
             (weatherData?.temperature_2m_max[daysFromNow] +
               weatherData?.temperature_2m_min[daysFromNow]) /
             2
           ).toFixed()} °C
-        </p>
-        <p>
-          {weatherData?.wind_speed_10m_max[daysFromNow]}km/s{" "}
-        </p>
-        <div>
-          {windDirectionToIcon(weatherData?.wind_direction_10m_dominant[daysFromNow])}
-        </div>
-      </div>
-      <div className="sunrise-sunset-container">
-        <FiSunrise size="20px" />
-        <Text>{weatherData?.sunrise[daysFromNow].slice(-5)}</Text>
-        <FiSunset size="20px" />
-        <Text>{weatherData?.sunset[daysFromNow].slice(-5)}</Text>
-      </div>
-    </div>
+        </Text>
+      </Box>
+      {fullWeatherComponentFlag && (
+        <>
+          <Box display="flex" justifyContent="center" alignItems="center" gap="10px">
+            <Text>
+              {weatherData?.wind_speed_10m_max[daysFromNow]}km/s{" "}
+            </Text>
+            <Box>
+              {windDirectionToIcon(weatherData?.wind_direction_10m_dominant[daysFromNow])}
+            </Box>
+          </Box>
+          <Box display="flex" justifyContent="space-evenly" alignItems="center" height="100%" gap="1rem">
+            <Icon as={FiSunrise} boxSize="20px" />
+            <Text>{weatherData?.sunrise[daysFromNow].slice(-5)}</Text>
+            <Icon as={FiSunset} boxSize="20px" />
+            <Text>{weatherData?.sunset[daysFromNow].slice(-5)}</Text>
+          </Box>
+        </>
+      )}
+    </Box>
   );
 };
 

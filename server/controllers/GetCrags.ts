@@ -72,7 +72,52 @@ const getAll = async (req: Request, res: Response) => {
       .json({ data: null, error: { code: 500, msg: "An error occurred." } });
   }
 }
+// create funciton that recieves cragId and checks whether a cragInfo for that ID exists. If it does return status code 201 otherwise return 200
 
+const cragInfoExists = async (req: Request, res: Response) => {
+  try {
+    const cragID = parseInt(req.params.cragID);
+
+    const existingCragInfo = await prisma.cragInfo.findFirst({
+      where: {
+        cragID: cragID,
+      },
+    });
+    if (existingCragInfo) {
+      res.status(201).json({ message: "CragInfo exists" });
+    } else {
+      res.status(200).json({ message: "CragInfo does not exist" });
+    }
+  } catch (err) {
+    console.error(err, "error");
+    res
+      .status(500)
+      .json({ error: { code: 500, msg: "An error occurred." } });
+  }
+}
+
+
+// do the same as above but for routes called cragRoutesExists
+const cragRoutesExists = async (req: Request, res: Response) => {
+  try {
+    const cragID = parseInt(req.params.cragID);
+    const existingCragRoutes = await prisma.route.findFirst({
+      where: {
+        cragID: cragID,
+      },
+    });
+    if (existingCragRoutes) {
+      res.status(201).json({ message: "CragRoutes exists" });
+    } else {
+      res.status(200).json({ message: "CragRoutes does not exist" });
+    }
+  } catch (err) {
+    console.error(err, "error");
+    res
+      .status(500)
+      .json({ error: { code: 500, msg: "An error occurred." } });
+  }
+}
 
 function getDistanceFromLatLonInKm(
   latStart: number,
@@ -102,7 +147,9 @@ function deg2rad(deg: number) {
 
 const controller = {
   getCrags,
-  getAll
+  getAll,
+  cragRoutesExists,
+  cragInfoExists
 };
 
 export default controller;
