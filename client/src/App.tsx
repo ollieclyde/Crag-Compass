@@ -15,7 +15,6 @@ import { googleMapLibrary } from "./helpers/googleAPI";
 import SearchModal from "./components/search-modal";
 import SearchResults from "./components/search-results";
 
-
 const GoogleApiKey: string = import.meta.env.VITE_GOOGLE_API;
 
 function App() {
@@ -128,7 +127,7 @@ function App() {
       >
         <Flex alignItems="center" gap="2rem">
           <Image
-            src="../assets/logo.png"
+            src="https://res.cloudinary.com/dsvnavnxo/image/upload/v1712157194/wcrasebie3ohquraxgdy.png"
             alt="A logo design for a climbing application named 'Crag Compass"
             boxSize="100px"
             borderRadius="full"

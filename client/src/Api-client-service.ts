@@ -1,7 +1,8 @@
 import axios from "axios";
 import { Crag, WeatherDataDay } from "./types/types";
 
-const serverURL: string = import.meta.env.VITE_SERVER_URL || "http://localhost:3000";
+const serverURL: string =
+  import.meta.env.VITE_SERVER_URL || "http://localhost:3000";
 
 const getAllCrags = async (
   lng: string,

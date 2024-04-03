@@ -183,5 +183,4 @@ const FullCragInfoModal = ({
   );
 };
 
-
 export default FullCragInfoModal;

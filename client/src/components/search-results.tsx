@@ -126,10 +126,10 @@ const SearchResults = ({
         <Wrap justify="center" spacing="20px" padding="20px">
           {Array.isArray(currentPageCrags)
             ? currentPageCrags.map((crag: Crag) => (
-              <WrapItem key={crag.cragID}>
-                <CragCard crag={crag} daysFromNow={daysFromNow} />
-              </WrapItem>
-            ))
+                <WrapItem key={crag.cragID}>
+                  <CragCard crag={crag} daysFromNow={daysFromNow} />
+                </WrapItem>
+              ))
             : null}
         </Wrap>
         <Flex justifyContent="space-around">
@@ -143,6 +143,6 @@ const SearchResults = ({
       </Box>
     </>
   );
-}
+};
 
 export default SearchResults;

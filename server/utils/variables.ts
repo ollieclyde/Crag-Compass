@@ -1,6 +1,5 @@
 import { GradeSystems } from "../types/types";
 
-
 export const gradeSystems: GradeSystems = {
   boulderingFont: {
     grades: [

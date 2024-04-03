@@ -11,7 +11,6 @@ import RatingComponent from "./subcomponents/rating-component";
 import WarningIcon from "./subcomponents/warning-icon";
 import WeatherComponent from "./subcomponents/weather-component";
 
-
 interface CragCardProps {
   crag: Crag;
   daysFromNow: number;

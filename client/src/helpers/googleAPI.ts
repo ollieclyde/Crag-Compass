@@ -56,17 +56,20 @@ export const distanceMatrix = async (
     },
   };
   try {
-    const response = await new Promise<google.maps.DistanceMatrixResponse>((resolve, reject) => {
-      service.getDistanceMatrix(request, (result, status) => {
-        if (status === google.maps.DistanceMatrixStatus.OK) {
-          if(result) resolve(result);
-        } else {
-          reject(new Error(status));
-        }
-      });
-    });
+    const response = await new Promise<google.maps.DistanceMatrixResponse>(
+      (resolve, reject) => {
+        service.getDistanceMatrix(request, (result, status) => {
+          if (status === google.maps.DistanceMatrixStatus.OK) {
+            if (result) resolve(result);
+          } else {
+            reject(new Error(status));
+          }
+        });
+      },
+    );
 
-    const timeInSecs = response?.rows[0]?.elements[0].duration_in_traffic?.value;
+    const timeInSecs =
+      response?.rows[0]?.elements[0].duration_in_traffic?.value;
     if (timeInSecs) {
       return timeInSecs;
     } else {

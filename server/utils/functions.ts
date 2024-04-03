@@ -13,37 +13,39 @@ export const getDistanceFromLatLonInKm = (
   var a =
     Math.sin(dLat / 2) * Math.sin(dLat / 2) +
     Math.cos(deg2rad(latStart)) *
-    Math.cos(deg2rad(latEnd)) *
-    Math.sin(dLon / 2) *
-    Math.sin(dLon / 2);
+      Math.cos(deg2rad(latEnd)) *
+      Math.sin(dLon / 2) *
+      Math.sin(dLon / 2);
   var c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
   var d = R * c;
 
   return d;
-}
+};
 
 function deg2rad(deg: number) {
   return deg * (Math.PI / 180);
 }
 
-
-export const findRangeIndex = (mainClimbingType: string, gradeSystems: GradeSystems) => {
+export const findRangeIndex = (
+  mainClimbingType: string,
+  gradeSystems: GradeSystems,
+) => {
   const rangeIndex = gradeSystems[mainClimbingType].range;
   const rangeArr =
     rangeIndex[0] !== rangeIndex[1]
       ? gradeSystems[mainClimbingType].grades.slice(
-        rangeIndex[0],
-        rangeIndex[1] + 1,
-      )
+          rangeIndex[0],
+          rangeIndex[1] + 1,
+        )
       : [
-        gradeSystems[mainClimbingType].grades[rangeIndex[0]],
-        gradeSystems[mainClimbingType].grades[rangeIndex[0]],
-      ];
+          gradeSystems[mainClimbingType].grades[rangeIndex[0]],
+          gradeSystems[mainClimbingType].grades[rangeIndex[0]],
+        ];
 
   return rangeArr.every((grade) => grade !== undefined)
     ? `${rangeArr[0]},${rangeArr[rangeArr.length - 1]}`
     : "";
-}
+};
 
 export const determineMainClimbingType = (typeCount: TypeCount) => {
   let mainClimbingTypeCount = 0;
@@ -54,11 +56,22 @@ export const determineMainClimbingType = (typeCount: TypeCount) => {
       mainClimbingTypeCount = value;
     }
   }
-  return mainClimbingType
+  return mainClimbingType;
 };
 
-export const calculateStatsForRoutes = (routes: Route[], gradeSystems: GradeSystems) => {
-  const stats = { beginner: 0, experienced: 0, advanced: 0, expert: 0, elite: 0, stars: 0, typeCount: { boulderingV: 0, boulderingFont: 0, sport: 0, trad: 0 } };
+export const calculateStatsForRoutes = (
+  routes: Route[],
+  gradeSystems: GradeSystems,
+) => {
+  const stats = {
+    beginner: 0,
+    experienced: 0,
+    advanced: 0,
+    expert: 0,
+    elite: 0,
+    stars: 0,
+    typeCount: { boulderingV: 0, boulderingFont: 0, sport: 0, trad: 0 },
+  };
 
   routes.forEach((route) => {
     const grade = route.grade.toUpperCase();

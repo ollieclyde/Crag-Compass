@@ -3,7 +3,11 @@ import prisma from "../models/db";
 
 import { Crag, CragInfo, Route } from "../types/types";
 import { gradeSystems } from "../utils/variables";
-import { calculateStatsForRoutes, determineMainClimbingType, findRangeIndex } from "../utils/functions";
+import {
+  calculateStatsForRoutes,
+  determineMainClimbingType,
+  findRangeIndex,
+} from "../utils/functions";
 
 const addCrag = async function (req: Request, res: Response) {
   try {
@@ -159,7 +163,7 @@ const addCragStats = async (req: Request, res: Response) => {
   const mainClimbingType = determineMainClimbingType(cragStats.typeCount);
 
   if (mainClimbingType) {
-    const range = findRangeIndex(mainClimbingType, gradeSystems)
+    const range = findRangeIndex(mainClimbingType, gradeSystems);
 
     await prisma.cragStats.create({
       data: {

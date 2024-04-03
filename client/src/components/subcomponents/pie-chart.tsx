@@ -92,9 +92,7 @@ export const PieChartComponent: React.FC<PieChartComponentProps> = ({
           className="pie-chart-key"
           paddingTop="3px"
         >
-          <Text fontSize="sm">
-            Routes: {crag.routeCount}
-          </Text>
+          <Text fontSize="sm">Routes: {crag.routeCount}</Text>
         </Box>
       </>
     );

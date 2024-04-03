@@ -14,12 +14,10 @@ interface PieChartKeyModalProps {
   setPieChartKeyModalFlag: Function;
 }
 
- const PieChartKeyModal = ({
+const PieChartKeyModal = ({
   pieChartKeyModalFlag,
   setPieChartKeyModalFlag,
-}:
-  PieChartKeyModalProps
-) => {
+}: PieChartKeyModalProps) => {
   return (
     <Modal
       isOpen={pieChartKeyModalFlag}
@@ -30,7 +28,10 @@ interface PieChartKeyModalProps {
         <ModalHeader>Route Difficulty Key</ModalHeader>
         <ModalCloseButton />
         <ModalBody>
-          <Image src="/assets/RockFax-Grades.png" alt="Pie Chart Key" />
+          <Image
+            src="https://res.cloudinary.com/dsvnavnxo/image/upload/v1712157194/niegg5qoegqxkmtrt6er.png"
+            alt="Pie Chart Key"
+          />
         </ModalBody>
         <ModalFooter></ModalFooter>
       </ModalContent>
