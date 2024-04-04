@@ -2,19 +2,20 @@
 
 Crag Compass is an innovative web application designed to assist climbers in discovering new climbing locations and crags around the world. It offers an intuitive interface that enables users to easily search for climbing spots based on their preferences, including location, difficulty level, weather and type of climbing (such as bouldering, sport climbing, or traditional climbing). Whether you're a seasoned climber looking for a new challenge or a beginner eager to explore the climbing world, Crag Compass is your go-to resource for finding the perfect crag.
 
-- Frontend in React with Vite, Typescript. Backend in Express, Sequelize and PostgreSQL.
+- Frontend in React with Vite, Typescript. Backend in Express, Prisma and PostgreSQL.
 - Puppeteer to web-scrape and fill the database with relevant information for the application.
 - Multiple APIs for the location, weather and directions.
 
 ![Alt text](readMeAssets/Crag-Compass-Screenshot.png)
 
-### Next features to be implements
+### Next features to be implemented
 
-- Improve NavBar and Modal component modularization.
-- Enhance route data collection for each crag by upgrading the webscraper to extract detailed information from UKC, including route popularity, crag details, access status, and approach times.
-- Introduce a "favourite crags" feature, allowing users to save preferred crags and view extended information, including driving times between them.
-- Implement autocomplete for location input to validate addresses for geocoding.
-- Upgrade weather data presentation by enriching the current information sourced from the weather URL.
+- Weather filter
+- Route difficulty filter
+- Mobile compatable
+- Driving time
+- Favourite crag
+- Approach time
 
 ### Getting Started:
 

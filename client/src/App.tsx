@@ -65,7 +65,6 @@ function App() {
         distRange,
       );
       if (apiResults) {
-        console.log(apiResults);
         setCrags(apiResults);
         const filtered = apiResults.filter((crag: Crag) => basicFilter(crag));
         setFilteredCrags(filtered);

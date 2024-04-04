@@ -2,7 +2,6 @@ import { PrismaClient } from "@prisma/client";
 import dotenv from "dotenv";
 dotenv.config();
 
-// Better error handling or fallbacks for database URLs
 const dataBaseURL =
   process.env.ENV === "test"
     ? process.env.TEST_DATABASE_URL

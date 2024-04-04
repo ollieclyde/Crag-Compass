@@ -34,7 +34,7 @@ const CragMap: React.FC<CragMapProps> = ({ osy, osx }) => {
       />
       <Marker
         position={[latitude, longitude]}
-        icon={customMarkerIcon} 
+        icon={customMarkerIcon}
       >
         <Popup>
           <a

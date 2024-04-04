@@ -66,8 +66,6 @@ const WeatherComponent = ({
     86: <TiWeatherSnow size="4rem" />,
   };
 
-  // from an input between 0 360 return the corresponding arrow icon
-
   const windDirectionToIcon = (direction: number): JSX.Element => {
     if (direction >= 0 && direction < 22.5) {
       return <TbCircleArrowUp />;

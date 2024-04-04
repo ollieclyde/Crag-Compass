@@ -23,39 +23,39 @@ const evaluateCrag = async (page, pageURL) => {
       ? await page.evaluate((el) => el.getAttribute("src"), imgEl)
       : "no image available";
   } catch (err) {
-    // img remains null if an error occurs
+    console.error("Error in image evaluation:", err);
   }
 
   try {
     const featuresEl = await page.$("#features_info");
     cragInfo.features = featuresEl
       ? await page.evaluate(
-          (el) =>
-            el.innerText
-              .replace(/\n/g, " ")
-              .replace("Crag features", "")
-              .trim(),
-          featuresEl,
-        )
+        (el) =>
+          el.innerText
+            .replace(/\n/g, " ")
+            .replace("Crag features", "")
+            .trim(),
+        featuresEl,
+      )
       : "No features information available";
   } catch (err) {
-    // features remains null if an error occurs
+    console.error("Error in features evaluation:", err);
   }
 
   try {
     const approachEl = await page.$("#approach_info");
     cragInfo.approach = approachEl
       ? await page.evaluate(
-          (el) =>
-            el.innerText
-              .replace(/\n/g, " ")
-              .replace("Approach notes", "")
-              .trim(),
-          approachEl,
-        )
+        (el) =>
+          el.innerText
+            .replace(/\n/g, " ")
+            .replace("Approach notes", "")
+            .trim(),
+        approachEl,
+      )
       : "No approach information available";
   } catch (err) {
-    // approach remains null if an error occurs
+    console.error("Error in approach evaluation:", err);
   }
 
   try {
@@ -74,42 +74,46 @@ const evaluateCrag = async (page, pageURL) => {
       cragInfo.accessNote =
         cragInfo.accessType > 1
           ? accessNote
-              .replace(/\n/g, " ")
-              .replace(/\t/g, " ")
-              .split("Click here for RAD Access Notes")[0]
-              .split(".st1")[0]
-              .slice(1)
-              .trim()
+            .replace(/\n/g, " ")
+            .replace(/\t/g, " ")
+            .split("Click here for RAD Access Notes")[0]
+            .split(".st1")[0]
+            .slice(1)
+            .trim()
           : accessNote
-              .replace(/\n/g, " ")
-              .replace(/\t/g, " ")
-              .split("Click here for RAD Access Notes")[0]
-              .split(".st1")[0]
-              .trim()
-              .slice(1)
-              .trim();
+            .replace(/\n/g, " ")
+            .replace(/\t/g, " ")
+            .split("Click here for RAD Access Notes")[0]
+            .split(".st1")[0]
+            .trim()
+            .slice(1)
+            .trim();
     }
-  } catch (err) {}
+  } catch (err) { }
   return cragInfo;
 };
 
 (async () => {
   try {
     const crags = await axios.get("http://localhost:3000/getAll");
+
     for (const crag of crags.data) {
       // check whether cragInfo exist by calling the get request to the server
       const cragInfoExist = await axios.get(
         `http://localhost:3000/crags/cragInfoExists/cragID/${crag.cragID}`,
       );
+
       if (cragInfoExist.status === 200) {
         const browser = await puppeteer.launch({ headless: true });
         const page = await browser.newPage();
         const pageURL = `https://www.ukclimbing.com/${crag.ukcURL}`;
         const cragInfo = await evaluateCrag(page, pageURL);
         cragInfo.cragID = crag.cragID;
+
         await axios.post("http://localhost:3000/addCragInfo", {
           cragInfoData: cragInfo,
         });
+        
         await browser.close();
       }
     }

@@ -10,6 +10,7 @@ import PieChartKeyModal from "./pie-chart-key-modal";
 import RatingComponent from "./subcomponents/rating-component";
 import WarningIcon from "./subcomponents/warning-icon";
 import WeatherComponent from "./subcomponents/weather-component";
+import { distanceMatrix } from "../helpers/googleAPI";
 
 interface CragCardProps {
   crag: Crag;
